@@ -16,7 +16,7 @@
   IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED
   WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 */
-#include "utf.h"
+#include "utfconv.h"
 #include "utils.h"
 #include <cstring>
 #include <string>
@@ -161,7 +161,7 @@ size_t WTF8_UTF8ToWide(wchar_t *widestr, const char *utf8str, int strict, size_t
     try {
         std::wstring widestrpp = WinTF8::UTF8ToWide(std::string(utf8str), strict != 0);
         if(widestr && bufsize != 0) {
-            std::memcpy(widestr, widestrpp.c_str(), WinTF8::min(widestrpp.size(), bufsize-1)*sizeof (wchar_t));
+            std::memcpy(widestr, widestrpp.c_str(), WinTF8::min(widestrpp.length(), bufsize-1)*sizeof (wchar_t));
             widestr[WinTF8::min(widestrpp.size(), bufsize)] = L'\0';
         }
         return widestrpp.size();
@@ -174,7 +174,7 @@ size_t WTF8_WideToUTF8(char *utf8str, const wchar_t *widestr, int strict, size_t
     try {
         std::string utf8strpp = WinTF8::WideToUTF8(std::wstring(widestr), strict != 0);
         if(utf8str && bufsize != 0) {
-            std::memcpy(utf8str, utf8strpp.c_str(), WinTF8::min(utf8strpp.size(), bufsize-1)*sizeof (char));
+            std::memcpy(utf8str, utf8strpp.c_str(), WinTF8::min(utf8strpp.length(), bufsize-1)*sizeof (char));
             utf8str[WinTF8::min(utf8strpp.size(), bufsize)] = '\0';
         }
         return utf8strpp.size();
@@ -184,5 +184,3 @@ size_t WTF8_WideToUTF8(char *utf8str, const wchar_t *widestr, int strict, size_t
 }
 
 }
-
-

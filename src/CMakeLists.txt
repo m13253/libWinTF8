@@ -1,5 +1,0 @@
-PROJECT(libWinTF8)
-SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -std=c++11 -O3")
-ADD_LIBRARY(libWinTF8 STATIC
-    utf.cpp
-)
