@@ -47,9 +47,6 @@ public:
         return u8string(s, strict);
     }
     std::wstring to_wide(bool strict = false) const;
-    std::string raw() const {
-        return static_cast<std::string>(*this);
-    }
     operator std::wstring() const {
         return to_wide();
     }
