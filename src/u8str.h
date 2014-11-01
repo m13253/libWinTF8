@@ -50,9 +50,6 @@ public:
     std::string raw() const {
         return static_cast<std::string>(*this);
     }
-    explicit operator std::string() const {
-        return raw();
-    }
     operator std::wstring() const {
         return to_wide();
     }
