@@ -20,6 +20,9 @@
 #ifndef WTF8_UTILS_H_INCLUDED_
 #define WTF8_UTILS_H_INCLUDED_
 
+#include <string>
+#include <cstring>
+
 namespace WinTF8 {
 
 template <typename T> 
@@ -37,6 +40,31 @@ static inline T clamp(T value, T a, T b) {
     return a < b ?
         value < a ? a : b < value ? b : value :
         value < b ? b : a < value ? a : value;
+}
+
+template <typename charT>
+static charT* new_c_str(const std::basic_string<charT>& s) {
+    charT* result = new charT[s.length()+1];
+    std::memcpy(result, s.c_str(), s.length()+1);
+    return result;
+}
+
+template <typename charT>
+static charT* new_c_str(const charT* s) {
+    if(s) {
+        size_t length = std::strlen(s);
+        charT* result = new charT[length+1];
+        std::memcpy(result, s, length+1);
+        return result;
+    } else
+        return nullptr;
+}
+
+template <typename charT>
+static inline charT* delete_c_str(charT* s) {
+    if(s)
+        delete[] s;
+    return nullptr;
 }
 
 }
