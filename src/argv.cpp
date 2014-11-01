@@ -44,7 +44,7 @@ std::vector<u8string> get_argv(int argc_hint, char* argv_hint[]) {
     result.reserve(argc);
     for(int i = 0; i < argc; ++i) {
 #if defined(_WIN32)
-        result.push_back(wide_to_utf8(std::wstring(__wargv[i])));
+        result.push_back(WinTF8::u8string(__wargv[i]));
 #elif defined(__APPLE__) && defined(__MACH__)
         result.push_back(argv[i]);
 #else
@@ -76,7 +76,7 @@ char **WTF8_get_argv(int argc_hint, const char **argv_hint) {
     char **result = new char *[argc+1];
     for(int i = 0; i < argc; ++i) {
 #if defined(_WIN32)
-        result[i] = WinTF8::new_c_str(wide_to_utf8(std::wstring(__wargv[i])));
+        result[i] = WinTF8::new_c_str(WinTF8::u8string(__wargv[i]));
 #elif defined(__APPLE__) && defined(__MACH__)
         result[i] = WinTF8::new_c_str(argv[i]);
 #else
