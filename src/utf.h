@@ -20,11 +20,15 @@
 #ifndef WTF8_UTF_H_INCLUDED_
 #define WTF8_UTF_H_INCLUDED_
 
-#include "util.h"
 #ifdef __cplusplus
+#include <cstddef>
 #include <stdexcept>
 #include <string>
+#else
+#include <stddef.h>
+#endif
 
+#ifdef __cplusplus
 namespace WinTF8 {
 
 class UnicodeError : public std::runtime_error {
@@ -39,7 +43,9 @@ std::wstring UTF8ToWide(const std::string& utf8str, bool strict = false);
 std::string WideToUTF8(const std::wstring& widestr, bool strict = false);
 
 };
+#endif
 
+#ifdef __cplusplus
 extern "C" {
 #endif
 
