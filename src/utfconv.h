@@ -27,20 +27,21 @@
 #else
 #include <stddef.h>
 #endif
+#include "u8str.h"
 
 #ifdef __cplusplus
 namespace WinTF8 {
 
-class UnicodeError : public std::runtime_error {
+class unicode_convert_error : public std::runtime_error {
     using std::runtime_error::runtime_error;
 public:
-    UnicodeError() : runtime_error("Can not convert string to Unicode") {}
+    unicode_convert_error() : runtime_error("Can not convert string to Unicode") {}
 };
 
 /* Microsoft VC++ Runtime behaves differently on different versions,
    we will just reimplement them ourselves. */
-std::wstring UTF8ToWide(const std::string& utf8str, bool strict = false);
-std::string WideToUTF8(const std::wstring& widestr, bool strict = false);
+std::wstring utf8_to_wide(const u8string& utf8str, bool strict = false);
+u8string wide_to_utf8(const std::wstring& widestr, bool strict = false);
 
 };
 #endif
@@ -49,8 +50,10 @@ std::string WideToUTF8(const std::wstring& widestr, bool strict = false);
 extern "C" {
 #endif
 
-size_t WTF8_UTF8ToWide(wchar_t *widestr, const char *utf8str, int strict, size_t bufsize);
-size_t WTF8_WideToUTF8(char *utf8str, const wchar_t *widestr, int strict, size_t bufsize);
+static const size_t WTF8_UNICODE_CONVERT_ERROR = -(size_t) 1;
+
+size_t WTF8_utf8_to_wide(wchar_t *widestr, const char *utf8str, int strict, size_t bufsize);
+size_t WTF8_wide_to_utf8(char *utf8str, const wchar_t *widestr, int strict, size_t bufsize);
 
 #ifdef __cplusplus
 }
