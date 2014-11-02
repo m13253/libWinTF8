@@ -16,36 +16,36 @@
   IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED
   WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 */
-#include <cstdio>
 #include "utils.h"
-#include "u8str.h"
-#include "fopen.h"
 
-namespace WinTF8 {
-
-std::FILE* fopen(const char* filename, const char* mode) {
 #ifdef _WIN32
-    return std::_wfopen(WinTF8::u8string(filename).to_wide().c_str(), WinTF8::u8string(mode).to_wide().c_str());
-#else
-    return std::fopen(filename, mode);
-#endif
-}
-
-std::FILE* fclose(std::FILE *fp) {
-    std::fclose(fp);
-    return nullptr;
-}
-
-}
 
 extern "C" {
 
-std::FILE *WTF8_fopen(const char *filename, const char *mode) {
-    return WinTF8::fopen(filename, mode);
-}
-
-std::FILE *WTF8_fclose(std::FILE *fp) {
-    return WinTF8::fclose(fp);
-}
+__declspec(dllimport) bool __stdcall SetConsoleOutputCP(unsigned int wCodePageID);
+__declspec(dllimport) bool __stdcall SetConsoleCP(unsigned int wCodePageID);
 
 }
+
+namespace WinTF8 {
+
+class CPSetter {
+public:
+    CPSetter();
+private:
+    static bool cp_already_set = false;
+};
+
+CPSetter::CPSetter() {
+    if(!cp_already_set) {
+        cp_already_set = true;
+        SetConsoleOutputCP(65001);
+        SetConsoleCP(65001);
+    }
+}
+
+CPSetter cp_setter_inst = CPSetter();
+
+}
+
+#endif

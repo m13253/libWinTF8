@@ -27,14 +27,20 @@
 #endif
 
 #ifdef __cplusplus
-extern "C" {
+namespace WinTF8 {
+std::FILE* fopen(const char* filename, const char* mode);
+std::FILE* fclose(std::FILE* fp);
+}
 #endif
 
+#ifdef __cplusplus
+extern "C" {
+std::FILE *WTF8_fopen(const char *filename, const char *mode);
+std::FILE *WTF8_fclose(std::FILE *fp);
+}
+#else
 FILE *WTF8_fopen(const char *filename, const char *mode);
 FILE *WTF8_fclose(FILE *fp);
-
-#ifdef __cplusplus
-}
 #endif
 
 #endif
