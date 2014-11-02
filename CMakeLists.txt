@@ -1,6 +1,10 @@
 cmake_minimum_required(VERSION 3.0)
 project(libWinTF8)
+if(NOT MSVC)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -std=c++11 -O3")
+else()
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /Wall /Ox")
+endif()
 aux_source_directory(src SRC_SOURCES)
 add_library(wintf8 STATIC ${SRC_SOURCES})
 install(TARGETS wintf8
