@@ -20,11 +20,11 @@
 #ifndef WTF8_H_INCLUDED_
 #define WTF8_H_INCLUDED_
 
-#include "argv.h"
-#include "env.h"
-#include "fopen.h"
-#include "u8ios.h"
-#include "u8str.h"
-#include "utfconv.h"
+#include "libwintf8/argv.h"
+#include "libwintf8/env.h"
+#include "libwintf8/fopen.h"
+#include "libwintf8/u8ios.h"
+#include "libwintf8/u8str.h"
+#include "libwintf8/utfconv.h"
 
 #endif
