@@ -16,6 +16,7 @@
   IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED
   WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 */
+#include <cstddef>
 #include <cstring>
 #include "utils.h"
 #include "utfconv.h"

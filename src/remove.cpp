@@ -16,16 +16,34 @@
   IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED
   WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 */
-#pragma once
-#ifndef WTF8_H_INCLUDED_
-#define WTF8_H_INCLUDED_
+#include <cerrno>
+#include <cstdio>
+#include "utils.h"
+#include "u8str.h"
+#include "utfconv.h"
+#include "fileio.h"
 
-#include "libwintf8/argv.h"
-#include "libwintf8/concp.h"
-#include "libwintf8/env.h"
-#include "libwintf8/fileio.h"
-#include "libwintf8/streamio.h"
-#include "libwintf8/u8str.h"
-#include "libwintf8/utfconv.h"
+namespace WinTF8 {
 
+int remove(const char* path) {
+#ifdef _WIN32
+    try {
+        return _wremove(u8string(path).to_wide(true).c_str());
+    } catch(unicode_conversion_error) {
+        errno = EINVAL;
+        return -1;
+    }
+#else
+    return std::remove(path);
 #endif
+}
+
+}
+
+extern "C" {
+
+int WTF8_remove(const char *path) {
+    return WinTF8::remove(path);
+}
+
+}

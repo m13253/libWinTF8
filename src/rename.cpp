@@ -16,4 +16,34 @@
   IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED
   WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 */
-#include "u8ios.h"
+#include <cerrno>
+#include <cstdio>
+#include "utils.h"
+#include "u8str.h"
+#include "utfconv.h"
+#include "fileio.h"
+
+namespace WinTF8 {
+
+int rename(const char* oldname, const char* newname) {
+#ifdef _WIN32
+    try {
+        return _wrename(u8string(oldname).to_wide(true).c_str(), u8string(newname).to_wide(true).c_str());
+    } catch(unicode_conversion_error) {
+        errno = EINVAL;
+        return -1;
+    }
+#else
+    return std::rename(oldname, newname);
+#endif
+}
+
+}
+
+extern "C" {
+
+int WTF8_rename(const char *oldname, const char *newname) {
+    return WinTF8::rename(oldname, newname);
+}
+
+}

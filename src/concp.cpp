@@ -17,7 +17,7 @@
   WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 */
 #include "utils.h"
-#include <iostream>
+#include "concp.h"
 
 #ifdef _WIN32
 extern "C" {

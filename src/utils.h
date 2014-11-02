@@ -20,6 +20,7 @@
 #ifndef WTF8_UTILS_H_INCLUDED_
 #define WTF8_UTILS_H_INCLUDED_
 
+#include <cstddef>
 #include <string>
 #include <cstring>
 

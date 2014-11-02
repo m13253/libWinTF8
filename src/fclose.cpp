@@ -16,16 +16,23 @@
   IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED
   WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 */
-#pragma once
-#ifndef WTF8_H_INCLUDED_
-#define WTF8_H_INCLUDED_
+#include <cstdio>
+#include "utils.h"
+#include "fileio.h"
 
-#include "libwintf8/argv.h"
-#include "libwintf8/concp.h"
-#include "libwintf8/env.h"
-#include "libwintf8/fileio.h"
-#include "libwintf8/streamio.h"
-#include "libwintf8/u8str.h"
-#include "libwintf8/utfconv.h"
+namespace WinTF8 {
 
-#endif
+std::FILE* fclose(std::FILE *fp) {
+    std::fclose(fp);
+    return nullptr;
+}
+
+}
+
+extern "C" {
+
+std::FILE *WTF8_fclose(std::FILE *fp) {
+    return WinTF8::fclose(fp);
+}
+
+}

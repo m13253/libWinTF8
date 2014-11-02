@@ -17,15 +17,13 @@
   WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 */
 #pragma once
-#ifndef WTF8_U8IOS_H_INCLUDED_
-#define WTF8_U8IOS_H_INCLUDED_
+#ifndef WTF8_STREAMIO_H_INCLUDED_
+#define WTF8_STREAMIO_H_INCLUDED_
 
 #ifdef __cplusplus
-#include <cstddef>
 #include <ios>
 #include <fstream>
 #include "u8str.h"
-#include "utfconv.h"
 
 namespace WinTF8 {
 

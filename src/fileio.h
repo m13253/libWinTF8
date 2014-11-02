@@ -17,8 +17,8 @@
   WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 */
 #pragma once
-#ifndef WTF8_FOPEN_H_INCLUDED_
-#define WTF8_FOPEN_H_INCLUDED_
+#ifndef WTF8_FILEIO_H_INCLUDED_
+#define WTF8_FILEIO_H_INCLUDED_
 
 #ifdef __cplusplus
 #include <cstdio>

@@ -16,16 +16,4 @@
   IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED
   WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 */
-#pragma once
-#ifndef WTF8_H_INCLUDED_
-#define WTF8_H_INCLUDED_
-
-#include "libwintf8/argv.h"
-#include "libwintf8/concp.h"
-#include "libwintf8/env.h"
-#include "libwintf8/fileio.h"
-#include "libwintf8/streamio.h"
-#include "libwintf8/u8str.h"
-#include "libwintf8/utfconv.h"
-
-#endif
+#include "streamio.h"

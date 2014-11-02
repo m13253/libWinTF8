@@ -16,16 +16,35 @@
   IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED
   WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 */
-#pragma once
-#ifndef WTF8_H_INCLUDED_
-#define WTF8_H_INCLUDED_
+#include <cerrno>
+#include <cstdio>
+#include "utils.h"
+#include "u8str.h"
+#include "utfconv.h"
+#include "fileio.h"
 
-#include "libwintf8/argv.h"
-#include "libwintf8/concp.h"
-#include "libwintf8/env.h"
-#include "libwintf8/fileio.h"
-#include "libwintf8/streamio.h"
-#include "libwintf8/u8str.h"
-#include "libwintf8/utfconv.h"
+namespace WinTF8 {
 
+std::FILE* freopen(const char* path, const char* mode, std::FILE* fp) {
+#ifdef _WIN32
+    try {
+        return _wfreopen(u8string(path).to_wide(true).c_str(), u8string(mode).to_wide(true).c_str(), fp);
+    } catch(unicode_conversion_error) {
+        std::fclose(fp);
+        errno = EINVAL;
+        return nullptr;
+    }
+#else
+    return std::freopen(path, mode, fp);
 #endif
+}
+
+}
+
+extern "C" {
+
+std::FILE *WTF8_freopen(const char *path, const char *mode, std::FILE *fp) {
+    return WinTF8::freopen(path, mode, fp);
+}
+
+}
