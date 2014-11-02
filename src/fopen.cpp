@@ -16,6 +16,7 @@
   IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED
   WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 */
+#include <cerrno>
 #include <cstdio>
 #include "utils.h"
 #include "u8str.h"
@@ -27,8 +28,9 @@ namespace WinTF8 {
 std::FILE* fopen(const char* path, const char* mode) {
 #ifdef _WIN32
     try {
-        return _wfopen(WinTF8::u8string(path).to_wide(true).c_str(), WinTF8::u8string(mode).to_wide(true).c_str());
+        return _wfopen(u8string(path).to_wide(true).c_str(), u8string(mode).to_wide(true).c_str());
     } catch(unicode_conversion_error) {
+        errno = EINVAL;
         return nullptr;
     }
 #else
@@ -39,9 +41,11 @@ std::FILE* fopen(const char* path, const char* mode) {
 std::FILE* freopen(const char* path, const char* mode, std::FILE* fp) {
 #ifdef _WIN32
     try {
-        return _wfreopen(WinTF8::u8string(path).to_wide().c_str(), WinTF8::u8string(mode).to_wide().c_str(), fp);
+        return _wfreopen(u8string(path).to_wide(true).c_str(), u8string(mode).to_wide(true).c_str(), fp);
     } catch(unicode_conversion_error) {
-        return WinTF8::fclose(fp);
+        WinTF8::fclose(fp);
+        errno = EINVAL;
+        return nullptr;
     }
 #else
     return std::freopen(path, mode, fp);
@@ -51,6 +55,32 @@ std::FILE* freopen(const char* path, const char* mode, std::FILE* fp) {
 std::FILE* fclose(std::FILE *fp) {
     std::fclose(fp);
     return nullptr;
+}
+
+int remove(const char* path) {
+#ifdef _WIN32
+    try {
+        return _wremove(u8string(path).to_wide(true).c_str());
+    } catch(unicode_conversion_error) {
+        errno = EINVAL;
+        return EINVAL;
+    }
+#else
+    return std::remove(path);
+#endif
+}
+
+int rename(const char* oldname, const char* newname) {
+#ifdef _WIN32
+    try {
+        return _wrename(u8string(oldname).to_wide(true).c_str(), u8string(newname).to_wide(true).c_str());
+    } catch(unicode_conversion_error) {
+        errno = EINVAL;
+        return EINVAL;
+    }
+#else
+    return std::rename(oldname, newname);
+#endif
 }
 
 }
@@ -67,6 +97,14 @@ std::FILE *WTF8_freopen(const char *path, const char *mode, std::FILE *fp) {
 
 std::FILE *WTF8_fclose(std::FILE *fp) {
     return WinTF8::fclose(fp);
+}
+
+int WTF8_remove(const char *path) {
+    return WinTF8::remove(path);
+}
+
+int WTF8_rename(const char *oldname, const char *newname) {
+    return WinTF8::rename(oldname, newname);
 }
 
 }

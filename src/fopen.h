@@ -31,6 +31,8 @@ namespace WinTF8 {
 std::FILE* fopen(const char* path, const char* mode);
 std::FILE* freopen(const char* path, const char* mode, std::FILE* fp);
 std::FILE* fclose(std::FILE* fp);
+int remove(const char* path);
+int rename(const char* oldname, const char* newname);
 }
 #endif
 
@@ -44,6 +46,15 @@ std::FILE *WTF8_fclose(std::FILE *fp);
 FILE *WTF8_fopen(const char *path, const char *mode);
 FILE *WTF8_freopen(const char *path, const char *mode, FILE *fp);
 FILE *WTF8_fclose(FILE *fp);
+#endif
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+int WTF8_remove(const char *path);
+int WTF8_rename(const char *oldname, const char *newname);
+#ifdef __cplusplus
+}
 #endif
 
 #endif
