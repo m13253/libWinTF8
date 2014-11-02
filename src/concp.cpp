@@ -17,34 +17,51 @@
   WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 */
 #include "utils.h"
+#include <iostream>
 
 #ifdef _WIN32
-
 extern "C" {
-
 __declspec(dllimport) bool __stdcall SetConsoleOutputCP(unsigned int wCodePageID);
 __declspec(dllimport) bool __stdcall SetConsoleCP(unsigned int wCodePageID);
-
 }
+#endif
 
 namespace WinTF8 {
 
+#ifdef _WIN32
 static bool cp_already_set = false;
+#endif
 
-class CPSetter {
-public:
-    CPSetter();
-};
-
-CPSetter::CPSetter() {
+bool init_console() {
+#ifdef _WIN32
     if(!cp_already_set) {
         cp_already_set = true;
         SetConsoleOutputCP(65001);
         SetConsoleCP(65001);
+        return true;
     }
+#endif
+    return false;
 }
 
-CPSetter cp_setter_inst = CPSetter();
+}
+
+extern "C" {
+
+int WTF8_init_console(void) {
+    return WinTF8::init_console();
+}
+
+#ifdef __GNUC__
+static int WTF8_init_console(void) __attribute__((constructor));
+#elif defined(_MSC_VER)
+static int WTF8_init_console_wrapper(void) {
+    WinTF8::init_console();
+    return 0;
+}
+#pragma section(".CRT$XCU", read)
+__declspec(allocate(".CRT$XCU")) static int (* _array_WTF8_init_console)(void) = WTF8_init_console_wrapper;
+#endif
 
 }
 
