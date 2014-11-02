@@ -3,3 +3,17 @@ project(libWinTF8)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -std=c++11 -O3")
 aux_source_directory(src SRC_SOURCES)
 add_library(wintf8 STATIC ${SRC_SOURCES})
+install(TARGETS wintf8
+        RUNTIME DESTINATION "bin"
+        LIBRARY DESTINATION "lib"
+        ARCHIVE DESTINATION "lib"
+)
+install(DIRECTORY src/
+        DESTINATION "include/libwintf8"
+        FILES_MATCHING PATTERN "*.h"
+        PATTERN "libwintf8.h" EXCLUDE
+        PATTERN "utils.h" EXCLUDE
+)
+install(FILES src/libwintf8.h
+        DESTINATION "include"
+)
