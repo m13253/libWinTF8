@@ -57,6 +57,7 @@ std::wstring utf8_to_wide(const u8string& utf8str, bool strict) {
                 if(ucs4 >= 0x800 && (ucs4 & 0xf800) != 0xd800) {
                     widestr.append(1, ucs4);
                     i += 3;
+                    continue;
                 }
             }
         } else if(uint8_t(utf8str[i]) < 0xf8) {
@@ -73,6 +74,7 @@ std::wstring utf8_to_wide(const u8string& utf8str, bool strict) {
                         });
                     }
                     i += 4;
+                    continue;
                 }
             }
         }
@@ -105,9 +107,9 @@ u8string wide_to_utf8(const std::wstring& widestr, bool strict) {
             if(uint32_t(widestr[i]) < 0x10000) {
                 if((uint32_t(widestr[i]) & 0xf800) != 0xd800) {
                     utf8str.append({
-                        char(widestr[0] >> 12 | 0xe0),
-                        char(((widestr[0] >> 6) & 0x3f) | 0x80),
-                        char((widestr[0] & 0x3f) | 0x80)
+                        char(widestr[i] >> 12 | 0xe0),
+                        char(((widestr[i] >> 6) & 0x3f) | 0x80),
+                        char((widestr[i] & 0x3f) | 0x80)
                     });
                     ++i;
                 } else if(strict) {
@@ -118,10 +120,10 @@ u8string wide_to_utf8(const std::wstring& widestr, bool strict) {
                 }
             } else if(uint32_t(widestr[i]) < 0x110000) {
                 utf8str.append({
-                    char(widestr[0] >> 18 | 0xf0),
-                    char(((widestr[0] >> 12) & 0x3f) | 0x80),
-                    char(((widestr[0] >> 6) & 0x3f) | 0x80),
-                    char((widestr[0] & 0x3f) | 0x80)
+                    char(widestr[i] >> 18 | 0xf0),
+                    char(((widestr[i] >> 12) & 0x3f) | 0x80),
+                    char(((widestr[i] >> 6) & 0x3f) | 0x80),
+                    char((widestr[i] & 0x3f) | 0x80)
                 });
                 ++i;
             } else if(strict) {
@@ -132,7 +134,7 @@ u8string wide_to_utf8(const std::wstring& widestr, bool strict) {
             }
         } else {
             if(i+1 < widestr.size() && uint32_t(widestr[i] & 0xfc00) == 0xd800 && uint32_t(widestr[i+1] & 0xfc00) == 0xdc00) {
-                uint32_t ucs4 = uint32_t((widestr[0] & 0x3ff) << 10 | (widestr[1] & 0x3ff)) + 0x10000;
+                uint32_t ucs4 = uint32_t((widestr[i] & 0x3ff) << 10 | (widestr[i+1] & 0x3ff)) + 0x10000;
                 utf8str.append({
                     char(ucs4 >> 18 | 0xf0),
                     char(((ucs4 >> 12) & 0x3f) | 0x80),
