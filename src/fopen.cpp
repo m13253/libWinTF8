@@ -23,11 +23,19 @@
 
 namespace WinTF8 {
 
-std::FILE* fopen(const char* filename, const char* mode) {
+std::FILE* fopen(const char* path, const char* mode) {
 #ifdef _WIN32
-    return std::_wfopen(WinTF8::u8string(filename).to_wide().c_str(), WinTF8::u8string(mode).to_wide().c_str());
+    return std::_wfopen(WinTF8::u8string(path).to_wide().c_str(), WinTF8::u8string(mode).to_wide().c_str());
 #else
-    return std::fopen(filename, mode);
+    return std::fopen(path, mode);
+#endif
+}
+
+std::FILE* freopen(const char* path, const char* mode, FILE* fp) {
+#ifdef _WIN32
+    return std::_wfreopen(WinTF8::u8string(path).to_wide().c_str(), WinTF8::u8string(mode).to_wide().c_str(), fp);
+#else
+    return std::freopen(path, mode, fp);
 #endif
 }
 
@@ -40,8 +48,12 @@ std::FILE* fclose(std::FILE *fp) {
 
 extern "C" {
 
-std::FILE *WTF8_fopen(const char *filename, const char *mode) {
-    return WinTF8::fopen(filename, mode);
+std::FILE *WTF8_fopen(const char *path, const char *mode) {
+    return WinTF8::fopen(path, mode);
+}
+
+std::FILE *WTF8_fopen(const char *path, const char *mode, FILE *fp) {
+    return WinTF8::freopen(path, mode, fp);
 }
 
 std::FILE *WTF8_fclose(std::FILE *fp) {

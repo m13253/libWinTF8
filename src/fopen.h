@@ -28,18 +28,21 @@
 
 #ifdef __cplusplus
 namespace WinTF8 {
-std::FILE* fopen(const char* filename, const char* mode);
+std::FILE* fopen(const char* path, const char* mode);
+std::FILE* freopen(const char* path, const char* mode, std::FILE* fp);
 std::FILE* fclose(std::FILE* fp);
 }
 #endif
 
 #ifdef __cplusplus
 extern "C" {
-std::FILE *WTF8_fopen(const char *filename, const char *mode);
+std::FILE *WTF8_fopen(const char *path, const char *mode);
+std::FILE *WTF8_freopen(const char *path, const char *mode, std::FILE* fp);
 std::FILE *WTF8_fclose(std::FILE *fp);
 }
 #else
-FILE *WTF8_fopen(const char *filename, const char *mode);
+FILE *WTF8_fopen(const char *path, const char *mode);
+FILE *WTF8_freopen(const char *path, const char *mode, FILE *fp);
 FILE *WTF8_fclose(FILE *fp);
 #endif
 
