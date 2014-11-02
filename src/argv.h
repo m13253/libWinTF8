@@ -35,6 +35,7 @@ std::vector<u8string> get_argv(int argc_hint, char* argv_hint[]);
 extern "C" {
 #endif
 
+int WTF8_get_argc(int argc_hint);
 char **WTF8_get_argv(int argc_hint, const char **argv_hint);
 char **WTF8_free_argv(int argc_got, char **argv_got);
 
