@@ -22,6 +22,7 @@
 
 #ifdef __cplusplus
 #include <cstddef>
+#include <functional>
 #include <string>
 #include <utility>
 
@@ -49,6 +50,20 @@ public:
     std::wstring to_wide(bool strict = false) const;
     operator std::wstring() const {
         return to_wide();
+    }
+};
+
+}
+
+namespace std {
+
+template<>
+struct hash<WinTF8::u8string> {
+private:
+    std::hash<std::string> hasher;
+public:
+    size_t operator()(const WinTF8::u8string& s) const {
+        return hasher(s);
     }
 };
 

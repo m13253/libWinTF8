@@ -63,7 +63,7 @@ int remove(const char* path) {
         return _wremove(u8string(path).to_wide(true).c_str());
     } catch(unicode_conversion_error) {
         errno = EINVAL;
-        return EINVAL;
+        return -1;
     }
 #else
     return std::remove(path);
@@ -76,7 +76,7 @@ int rename(const char* oldname, const char* newname) {
         return _wrename(u8string(oldname).to_wide(true).c_str(), u8string(newname).to_wide(true).c_str());
     } catch(unicode_conversion_error) {
         errno = EINVAL;
-        return EINVAL;
+        return -1;
     }
 #else
     return std::rename(oldname, newname);
