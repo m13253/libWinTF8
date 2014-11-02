@@ -32,10 +32,10 @@
 #ifdef __cplusplus
 namespace WinTF8 {
 
-class unicode_convert_error : public std::runtime_error {
+class unicode_conversion_error : public std::runtime_error {
     using std::runtime_error::runtime_error;
 public:
-    unicode_convert_error() : runtime_error("Can not convert string to Unicode") {}
+    unicode_conversion_error() : runtime_error("Can not convert string to Unicode") {}
 };
 
 /* Microsoft VC++ Runtime behaves differently on different versions,

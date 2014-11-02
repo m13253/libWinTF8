@@ -19,13 +19,18 @@
 #include <cstdio>
 #include "utils.h"
 #include "u8str.h"
+#include "utfconv.h"
 #include "fopen.h"
 
 namespace WinTF8 {
 
 std::FILE* fopen(const char* path, const char* mode) {
 #ifdef _WIN32
-    return std::_wfopen(WinTF8::u8string(path).to_wide().c_str(), WinTF8::u8string(mode).to_wide().c_str());
+    try {
+        return _wfopen(WinTF8::u8string(path).to_wide(true).c_str(), WinTF8::u8string(mode).to_wide(true).c_str());
+    } catch(unicode_conversion_error) {
+        return nullptr;
+    }
 #else
     return std::fopen(path, mode);
 #endif
@@ -33,7 +38,11 @@ std::FILE* fopen(const char* path, const char* mode) {
 
 std::FILE* freopen(const char* path, const char* mode, std::FILE* fp) {
 #ifdef _WIN32
-    return std::_wfreopen(WinTF8::u8string(path).to_wide().c_str(), WinTF8::u8string(mode).to_wide().c_str(), fp);
+    try {
+        return _wfreopen(WinTF8::u8string(path).to_wide().c_str(), WinTF8::u8string(mode).to_wide().c_str(), fp);
+    } catch(unicode_conversion_error) {
+        return WinTF8::fclose(fp);
+    }
 #else
     return std::freopen(path, mode, fp);
 #endif

@@ -29,11 +29,11 @@ __declspec(dllimport) bool __stdcall SetConsoleCP(unsigned int wCodePageID);
 
 namespace WinTF8 {
 
+static bool cp_already_set = false;
+
 class CPSetter {
 public:
     CPSetter();
-private:
-    static bool cp_already_set = false;
 };
 
 CPSetter::CPSetter() {

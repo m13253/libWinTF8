@@ -77,7 +77,7 @@ std::wstring utf8_to_wide(const u8string& utf8str, bool strict) {
             }
         }
         if(strict)
-            throw unicode_convert_error();
+            throw unicode_conversion_error();
         else {
             widestr.append(1, 0xfffd);
             ++i;
@@ -111,7 +111,7 @@ u8string wide_to_utf8(const std::wstring& widestr, bool strict) {
                     });
                     ++i;
                 } else if(strict) {
-                    throw unicode_convert_error();
+                    throw unicode_conversion_error();
                 } else {
                     utf8str.append("\xef\xbf\xbd", 3);
                     ++i;
@@ -125,7 +125,7 @@ u8string wide_to_utf8(const std::wstring& widestr, bool strict) {
                 });
                 ++i;
             } else if(strict) {
-                throw unicode_convert_error();
+                throw unicode_conversion_error();
             } else {
                 utf8str.append("\xef\xbf\xbd", 3);
                 ++i;
@@ -141,7 +141,7 @@ u8string wide_to_utf8(const std::wstring& widestr, bool strict) {
                 });
                 i += 2;
             } else if(strict) {
-                throw unicode_convert_error();
+                throw unicode_conversion_error();
             } else {
                 utf8str.append("\xef\xbf\xbd", 3);
                 ++i;
@@ -164,7 +164,7 @@ size_t WTF8_utf8_to_wide(wchar_t *widestr, const char *utf8str, int strict, size
             widestr[WinTF8::min(widestrpp.size(), bufsize)] = L'\0';
         }
         return widestrpp.size();
-    } catch(WinTF8::unicode_convert_error) {
+    } catch(WinTF8::unicode_conversion_error) {
         return WTF8_UNICODE_CONVERT_ERROR;
     }
 }
@@ -177,7 +177,7 @@ size_t WTF8_wide_to_utf8(char *utf8str, const wchar_t *widestr, int strict, size
             utf8str[WinTF8::min(utf8strpp.size(), bufsize)] = '\0';
         }
         return utf8strpp.size();
-    } catch(WinTF8::unicode_convert_error) {
+    } catch(WinTF8::unicode_conversion_error) {
         return WTF8_UNICODE_CONVERT_ERROR;
     }
 }

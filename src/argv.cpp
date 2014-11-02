@@ -22,11 +22,15 @@
 #include "argv.h"
 
 #if defined(_WIN32)
-extern "C" extern int __argc;
-extern "C" extern wchar_t** __wargv;
+extern "C" {
+    extern int __argc;
+    extern wchar_t** __wargv;
+}
 #elif defined(__APPLE__) && defined(__MACH__)
-extern "C" extern int* _NSGetArgc();
-extern "C" extern char*** _NSGetArgv();
+extern "C" {
+    extern int* _NSGetArgc();
+    extern char*** _NSGetArgv();
+}
 #endif
 
 namespace WinTF8 {
