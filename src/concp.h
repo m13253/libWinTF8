@@ -23,15 +23,16 @@
 #ifdef __cplusplus
 namespace WinTF8 {
 bool init_console();
-#ifdef _WIN32
-class _ConsoleInitiator {
+
+class InitConsole {
 public:
+#ifdef _WIN32
     _ConsoleInitiator() {
         init_console();
     }
-};
-static _ConsoleInitiator _console_initiator = _ConsoleInitiator();
 #endif
+};
+
 }
 #endif
 
