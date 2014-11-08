@@ -27,7 +27,7 @@ bool init_console();
 class InitConsole {
 public:
 #ifdef _WIN32
-    _ConsoleInitiator() {
+    InitConsole() {
         init_console();
     }
 #endif

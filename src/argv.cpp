@@ -16,16 +16,15 @@
   IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED
   WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 */
+#include <stdexcept>
+#include <fstream>
 #include <vector>
 #include "utils.h"
 #include "u8str.h"
 #include "argv.h"
 
 #if defined(_WIN32)
-extern "C" {
-    extern int __argc;
-    extern wchar_t** __wargv;
-}
+#include <windows.h>
 #elif defined(__APPLE__) && defined(__MACH__)
 extern "C" {
     extern int* _NSGetArgc();
@@ -35,68 +34,94 @@ extern "C" {
 
 namespace WinTF8 {
 
-std::vector<u8string> get_argv(int argc_hint, char* argv_hint[]) {
+std::vector<u8string> get_argv() {
 #if defined(_WIN32)
-    int argc = __argc;
-#elif defined(__APPLE__) && defined(__MACH__)
-    int argc = *_NSGetArgc();
-    char **argv = *_NSGetArgv();
-#else
-    int argc = argc_hint;
-#endif
+    int argc;
+    wchar_t** wargv = CommandLineToArgvW(GetCommandLineW(), &argc);
     std::vector<u8string> result;
     result.reserve(argc);
-    for(int i = 0; i < argc; ++i) {
-#if defined(_WIN32)
-        result.push_back(WinTF8::u8string(__wargv[i]));
-#elif defined(__APPLE__) && defined(__MACH__)
-        result.push_back(argv[i]);
-#else
-        result.push_back(argv_hint[i]);
-#endif
-    }
+    for(int i = 0; i < argc; ++i)
+        result.push_back(u8string(wargv[i]));
+    LocalFree(static_cast<void*>(wargv));
     return result;
+#elif defined(__APPLE__) && defined(__MACH__)
+    int argc = *_NSGetArgc();
+    char** argv = *_NSGetArgv();
+    std::vector<u8string> result;
+    result.reserve(argc);
+    for(int i = 0; i < argc; ++i)
+        result.push_back(u8string(argv[i]));
+    return result;
+#else
+    std::ifstream cmdline("/proc/self/cmdline");
+    if(cmdline.good()) {
+        std::vector<u8string> result;
+        while(!cmdline.eof()) {
+            u8string argi;
+            for(;;) {
+                char c;
+                cmdline.get(c);
+                if(cmdline.good())
+                    if(c != '\0')
+                        argi.push_back(c);
+                    else
+                        break;
+                else
+                    throw std::runtime_error("unable to get commandline arguments");
+            }
+            result.push_back(std::move(argi));
+        }
+        return result;
+    } else
+        throw std::runtime_error("unable to get commandline arguments");
+#endif
 }
 
 }
 
 extern "C" {
 
-int WTF8_get_argc(int argc_hint) {
+char **WTF8_get_argv(int *argc) {
 #if defined(_WIN32)
-    return __argc;
-#elif defined(__APPLE__) && defined(__MACH__)
-    return *_NSGetArgc();
-#else
-    return argc_hint;
-#endif
-}
-
-char **WTF8_get_argv(int argc_hint, const char **argv_hint) {
-    int argc = WTF8_get_argc(argc_hint);
-#if defined(__APPLE__) && defined(__MACH__)
-    char **argv = *_NSGetArgv();
-#endif
-    char **result = new char *[argc+1];
-    for(int i = 0; i < argc; ++i) {
-#if defined(_WIN32)
-        result[i] = WinTF8::new_c_str(WinTF8::u8string(__wargv[i]));
-#elif defined(__APPLE__) && defined(__MACH__)
-        result[i] = WinTF8::new_c_str(argv[i]);
-#else
-        result[i] = WinTF8::new_c_str(argv_hint[i]);
-#endif
-    }
-    result[argc] = nullptr;
+    int argc_;
+    wchar_t** wargv = CommandLineToArgvW(GetCommandLineW(), &argc_);
+    if(argc)
+        *argc = argc_;
+    char** result = new char*[argc_+1];
+    for(int i = 0; i < argc_; ++i)
+        result[i] = WinTF8::new_c_str(WinTF8::u8string(wargv[i]));
+    result[argc_] = nullptr;
     return result;
+#elif defined(__APPLE__) && defined(__MACH__)
+    if(argc)
+        *argc = *_NSGetArgc();
+    return *_NSGetArgv();
+#else
+    try {
+        std::vector<WinTF8::u8string> argv = WinTF8::get_argv();
+        if(argc)
+            *argc = argv.size();
+        char** result = new char*[argv.size()+1];
+        for(size_t i = 0; i < argv.size(); ++i)
+            result[i] = WinTF8::new_c_str(argv[i]);
+        result[argv.size()] = nullptr;
+        return result;
+    } catch(std::runtime_error) {
+        if(argc)
+            *argc = 0;
+        return nullptr;
+    }
+#endif
 }
 
-char **WTF8_free_argv(int argc_got, char **argv_got) {
-    if(argv_got) {
-        for(int i = 0; i < argc_got; ++i)
-            WinTF8::delete_c_str(argv_got[i]);
-        delete[] argv_got;
+char **WTF8_free_argv(char **argv) {
+#if !defined(__APPLE__) || !defined(__MACH__)
+    if(argv) {
+        for(size_t i = 0; argv[i]; ++i)
+            argv[i] = WinTF8::delete_c_str(argv[i]);
+        delete[] argv;
     }
+#endif
     return nullptr;
 }
 

@@ -20,10 +20,7 @@
 #include "concp.h"
 
 #ifdef _WIN32
-extern "C" {
-__declspec(dllimport) bool __stdcall SetConsoleOutputCP(unsigned int wCodePageID);
-__declspec(dllimport) bool __stdcall SetConsoleCP(unsigned int wCodePageID);
-}
+#include <windows.h>
 #endif
 
 namespace WinTF8 {
