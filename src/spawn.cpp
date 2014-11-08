@@ -152,7 +152,7 @@ static pid_t spawnvp_posix(const char* file, char* const* argv) {
 
 pid_t spawnvp(const u8string& file, const std::vector<u8string>& argv) {
 #ifdef _WIN32
-    return spawnvp_win32(file.empty() ? file.to_wide().c_str() : nullptr, argv);
+    return spawnvp_win32(file.empty() ? nullptr : file.to_wide().c_str(), argv);
 #else
     std::vector<char*> cargv;
     cargv.reserve(argv.size()+1);
