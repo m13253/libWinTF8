@@ -56,7 +56,7 @@ std::vector<u8string> get_argv() {
     std::ifstream cmdline("/proc/self/cmdline");
     if(cmdline.good()) {
         std::vector<u8string> result;
-        while(!cmdline.eof()) {
+        for(;;) {
             u8string argi;
             for(;;) {
                 char c;
@@ -66,12 +66,13 @@ std::vector<u8string> get_argv() {
                         argi.push_back(c);
                     else
                         break;
+                else if(cmdline.eof() && argi.empty())
+                    return result;
                 else
                     throw std::runtime_error("unable to get commandline arguments");
             }
             result.push_back(std::move(argi));
         }
-        return result;
     } else
         throw std::runtime_error("unable to get commandline arguments");
 #endif
