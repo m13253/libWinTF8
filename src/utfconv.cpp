@@ -21,7 +21,7 @@
 #include "utils.h"
 #include "utfconv.h"
 
-namespace WinTF8 {
+namespace WTF8 {
 
 static bool utf8_check_continuation(const u8string& utf8str, size_t start, size_t check_length) {
     if(utf8str.size() > start + check_length) {
@@ -168,26 +168,26 @@ extern "C" {
 
 size_t WTF8_utf8_to_wide(wchar_t *widestr, const char *utf8str, int strict, size_t bufsize) {
     try {
-        std::wstring widestrpp = WinTF8::utf8_to_wide(WinTF8::u8string(utf8str), strict != 0);
+        std::wstring widestrpp = WTF8::utf8_to_wide(WTF8::u8string(utf8str), strict != 0);
         if(widestr && bufsize != 0) {
-            std::memcpy(widestr, widestrpp.data(), WinTF8::min(widestrpp.length(), bufsize-1)*sizeof (wchar_t));
-            widestr[WinTF8::min(widestrpp.size(), bufsize)] = L'\0';
+            std::memcpy(widestr, widestrpp.data(), WTF8::min(widestrpp.length(), bufsize-1)*sizeof (wchar_t));
+            widestr[WTF8::min(widestrpp.size(), bufsize)] = L'\0';
         }
         return widestrpp.size();
-    } catch(WinTF8::unicode_conversion_error) {
+    } catch(WTF8::unicode_conversion_error) {
         return WTF8_UNICODE_CONVERT_ERROR;
     }
 }
 
 size_t WTF8_wide_to_utf8(char *utf8str, const wchar_t *widestr, int strict, size_t bufsize) {
     try {
-        WinTF8::u8string utf8strpp = WinTF8::wide_to_utf8(std::wstring(widestr), strict != 0);
+        WTF8::u8string utf8strpp = WTF8::wide_to_utf8(std::wstring(widestr), strict != 0);
         if(utf8str && bufsize != 0) {
-            std::memcpy(utf8str, utf8strpp.data(), WinTF8::min(utf8strpp.length(), bufsize-1)*sizeof (char));
-            utf8str[WinTF8::min(utf8strpp.size(), bufsize)] = '\0';
+            std::memcpy(utf8str, utf8strpp.data(), WTF8::min(utf8strpp.length(), bufsize-1)*sizeof (char));
+            utf8str[WTF8::min(utf8strpp.size(), bufsize)] = '\0';
         }
         return utf8strpp.size();
-    } catch(WinTF8::unicode_conversion_error) {
+    } catch(WTF8::unicode_conversion_error) {
         return WTF8_UNICODE_CONVERT_ERROR;
     }
 }

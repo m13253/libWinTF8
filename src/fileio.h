@@ -27,7 +27,7 @@
 #endif
 
 #ifdef __cplusplus
-namespace WinTF8 {
+namespace WTF8 {
 std::FILE* fopen(const char* path, const char* mode);
 std::FILE* freopen(const char* path, const char* mode, std::FILE* fp);
 std::FILE* fclose(std::FILE* fp);

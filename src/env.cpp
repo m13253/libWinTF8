@@ -24,7 +24,7 @@
 #include "utils.h"
 #include "u8str.h"
 
-namespace WinTF8 {
+namespace WTF8 {
 
 #ifdef _WIN32
 static std::unordered_map<u8string, u8string> env_cache;
@@ -73,15 +73,15 @@ int putenv(const char* envstring) {
 extern "C" {
 
 char *WTF8_getenv(const char *varname) {
-    return WinTF8::getenv(varname);
+    return WTF8::getenv(varname);
 }
 
 char *WTF8_getenv_nocache(const char *varname) {
-    return WinTF8::getenv(varname, true);
+    return WTF8::getenv(varname, true);
 }
 
 int WTF8_putenv(const char *envstring) {
-    return WinTF8::putenv(envstring);
+    return WTF8::putenv(envstring);
 }
 
 }

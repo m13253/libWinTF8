@@ -23,7 +23,7 @@
 #include <windows.h>
 #endif
 
-namespace WinTF8 {
+namespace WTF8 {
 
 #ifdef _WIN32
 static bool cp_already_set = false;
@@ -46,7 +46,7 @@ bool init_console() {
 extern "C" {
 
 int WTF8_init_console(void) {
-    return WinTF8::init_console();
+    return WTF8::init_console();
 }
 
 }

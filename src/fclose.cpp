@@ -20,7 +20,7 @@
 #include "utils.h"
 #include "fileio.h"
 
-namespace WinTF8 {
+namespace WTF8 {
 
 std::FILE* fclose(std::FILE *fp) {
     std::fclose(fp);
@@ -32,7 +32,7 @@ std::FILE* fclose(std::FILE *fp) {
 extern "C" {
 
 std::FILE *WTF8_fclose(std::FILE *fp) {
-    return WinTF8::fclose(fp);
+    return WTF8::fclose(fp);
 }
 
 }

@@ -21,7 +21,7 @@
 #define WTF8_ENV_H_INCLUDED_
 
 #ifdef __cplusplus
-namespace WinTF8 {
+namespace WTF8 {
 char* getenv(const char* varname, bool ignore_cache = false);
 int putenv(const char* envstring);
 }

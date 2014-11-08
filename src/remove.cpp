@@ -23,7 +23,7 @@
 #include "utfconv.h"
 #include "fileio.h"
 
-namespace WinTF8 {
+namespace WTF8 {
 
 int remove(const char* path) {
 #ifdef _WIN32
@@ -43,7 +43,7 @@ int remove(const char* path) {
 extern "C" {
 
 int WTF8_remove(const char *path) {
-    return WinTF8::remove(path);
+    return WTF8::remove(path);
 }
 
 }

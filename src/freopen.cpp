@@ -23,7 +23,7 @@
 #include "utfconv.h"
 #include "fileio.h"
 
-namespace WinTF8 {
+namespace WTF8 {
 
 std::FILE* freopen(const char* path, const char* mode, std::FILE* fp) {
 #ifdef _WIN32
@@ -44,7 +44,7 @@ std::FILE* freopen(const char* path, const char* mode, std::FILE* fp) {
 extern "C" {
 
 std::FILE *WTF8_freopen(const char *path, const char *mode, std::FILE *fp) {
-    return WinTF8::freopen(path, mode, fp);
+    return WTF8::freopen(path, mode, fp);
 }
 
 }

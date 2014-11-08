@@ -23,7 +23,7 @@
 #include "utfconv.h"
 #include "fileio.h"
 
-namespace WinTF8 {
+namespace WTF8 {
 
 std::FILE* fopen(const char* path, const char* mode) {
 #ifdef _WIN32
@@ -43,7 +43,7 @@ std::FILE* fopen(const char* path, const char* mode) {
 extern "C" {
 
 std::FILE *WTF8_fopen(const char *path, const char *mode) {
-    return WinTF8::fopen(path, mode);
+    return WTF8::fopen(path, mode);
 }
 
 }

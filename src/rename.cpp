@@ -23,7 +23,7 @@
 #include "utfconv.h"
 #include "fileio.h"
 
-namespace WinTF8 {
+namespace WTF8 {
 
 int rename(const char* oldname, const char* newname) {
 #ifdef _WIN32
@@ -43,7 +43,7 @@ int rename(const char* oldname, const char* newname) {
 extern "C" {
 
 int WTF8_rename(const char *oldname, const char *newname) {
-    return WinTF8::rename(oldname, newname);
+    return WTF8::rename(oldname, newname);
 }
 
 }

@@ -20,7 +20,7 @@
 #include "u8str.h"
 #include "utfconv.h"
 
-namespace WinTF8 {
+namespace WTF8 {
 
 u8string::u8string(const std::wstring& s, bool strict) :
     u8string(wide_to_utf8(s, strict)) {

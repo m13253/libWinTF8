@@ -24,7 +24,7 @@
 #include <string>
 #include <cstring>
 
-namespace WinTF8 {
+namespace WTF8 {
 
 template <typename T> 
 static inline T min(T a, T b) {

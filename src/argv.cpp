@@ -32,7 +32,7 @@ extern "C" {
 }
 #endif
 
-namespace WinTF8 {
+namespace WTF8 {
 
 std::vector<u8string> get_argv() {
 #if defined(_WIN32)
@@ -90,7 +90,7 @@ char **WTF8_get_argv(int *argc) {
         *argc = argc_;
     char** result = new char*[argc_+1];
     for(int i = 0; i < argc_; ++i)
-        result[i] = WinTF8::new_c_str(WinTF8::u8string::from_wide(wargv[i]));
+        result[i] = WTF8::new_c_str(WTF8::u8string::from_wide(wargv[i]));
     result[argc_] = nullptr;
     LocalFree(static_cast<void*>(wargv));
     return result;
@@ -100,12 +100,12 @@ char **WTF8_get_argv(int *argc) {
     return *_NSGetArgv();
 #else
     try {
-        std::vector<WinTF8::u8string> argv = WinTF8::get_argv();
+        std::vector<WTF8::u8string> argv = WTF8::get_argv();
         if(argc)
             *argc = argv.size();
         char** result = new char*[argv.size()+1];
         for(size_t i = 0; i < argv.size(); ++i)
-            result[i] = WinTF8::new_c_str(argv[i]);
+            result[i] = WTF8::new_c_str(argv[i]);
         result[argv.size()] = nullptr;
         return result;
     } catch(std::runtime_error) {
@@ -120,7 +120,7 @@ char **WTF8_free_argv(char **argv) {
 #if !defined(__APPLE__) || !defined(__MACH__)
     if(argv) {
         for(size_t i = 0; argv[i]; ++i)
-            argv[i] = WinTF8::delete_c_str(argv[i]);
+            argv[i] = WTF8::delete_c_str(argv[i]);
         delete[] argv;
     }
 #endif

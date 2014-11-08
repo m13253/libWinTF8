@@ -30,7 +30,7 @@
 #include "u8str.h"
 
 #ifdef __cplusplus
-namespace WinTF8 {
+namespace WTF8 {
 
 class unicode_conversion_error : public std::runtime_error {
     using std::runtime_error::runtime_error;

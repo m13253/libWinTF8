@@ -24,7 +24,7 @@
 #include <vector>
 #include "u8str.h"
 
-namespace WinTF8 {
+namespace WTF8 {
 
 std::vector<u8string> get_argv();
 

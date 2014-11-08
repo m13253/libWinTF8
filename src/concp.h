@@ -21,7 +21,7 @@
 #define WTF8_CONCP_H_INCLUDED_
 
 #ifdef __cplusplus
-namespace WinTF8 {
+namespace WTF8 {
 bool init_console();
 
 class InitConsole {

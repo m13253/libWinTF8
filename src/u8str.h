@@ -26,7 +26,7 @@
 #include <string>
 #include <utility>
 
-namespace WinTF8 {
+namespace WTF8 {
 
 class u8string : public std::string {
 public:
@@ -58,9 +58,9 @@ public:
 namespace std {
 
 template<>
-struct hash<WinTF8::u8string> {
+struct hash<WTF8::u8string> {
 public:
-    size_t operator()(const WinTF8::u8string& s) const {
+    size_t operator()(const WTF8::u8string& s) const {
         return hasher(s);
     }
 private:

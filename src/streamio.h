@@ -25,7 +25,7 @@
 #include <fstream>
 #include "u8str.h"
 
-namespace WinTF8 {
+namespace WTF8 {
 
 template<typename CharT, typename Traits = std::char_traits<CharT> >
 class basic_ifstream : public std::basic_ifstream<CharT, Traits> {
