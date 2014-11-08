@@ -22,22 +22,20 @@
 
 #ifdef __cplusplus
 #include <vector>
+#endif
 #include "u8str.h"
 
+#ifdef __cplusplus
 namespace WTF8 {
-
 std::vector<u8string> get_argv();
-
 }
 #endif
 
 #ifdef __cplusplus
 extern "C" {
 #endif
-
 char **WTF8_get_argv(int *argc);
 char **WTF8_free_argv(char **argv);
-
 #ifdef __cplusplus
 }
 #endif

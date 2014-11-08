@@ -134,7 +134,6 @@ typedef basic_ofstream<wchar_t> wofstream;
 typedef basic_fstream<wchar_t>  wfstream;
 
 }
-
 #endif
 
 #endif

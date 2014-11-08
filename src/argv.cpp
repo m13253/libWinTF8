@@ -69,12 +69,12 @@ std::vector<u8string> get_argv() {
                 else if(cmdline.eof() && argi.empty())
                     return result;
                 else
-                    throw std::runtime_error("unable to get commandline arguments");
+                    throw std::runtime_error("Unable to get commandline arguments");
             }
             result.push_back(std::move(argi));
         }
     } else
-        throw std::runtime_error("unable to get commandline arguments");
+        throw std::runtime_error("Unable to get commandline arguments");
 #endif
 }
 
@@ -105,7 +105,7 @@ char **WTF8_get_argv(int *argc) {
             *argc = argv.size();
         char** result = new char*[argv.size()+1];
         for(size_t i = 0; i < argv.size(); ++i)
-            result[i] = WTF8::new_c_str(argv[i]);
+            result[i] = WTF8::new_c_str(argv.at(i));
         result[argv.size()] = nullptr;
         return result;
     } catch(std::runtime_error) {
