@@ -81,10 +81,9 @@ pid_t spawnvp_win32(const wchar_t* file, const std::vector<u8string>& argv) {
 #else
 static pid_t spawnvp_posix(const char* file, char* const* argv) {
     int errpipe[2];
-    if(pipe(errpipe)) {
-        delete[] argv;
+    if(pipe(errpipe))
         throw process_spawn_error("Unable to create pipes during process creation");
-    }
+
     {
         unsigned int low_fds_to_close = 0;
         bool errpipe_fail = false;
@@ -102,15 +101,13 @@ static pid_t spawnvp_posix(const char* file, char* const* argv) {
         if(low_fds_to_close & 0x1) close(0);
         if(low_fds_to_close & 0x2) close(1);
         if(low_fds_to_close & 0x4) close(2);
-        if(errpipe_fail) {
-            delete[] argv;
+        if(errpipe_fail)
             throw process_spawn_error("Unable to create pipes during process creation");
-        }
     }
+
     {
         int errpipe_flags = fcntl(errpipe[1], F_GETFD);
         if(errpipe_flags == -1) {
-            delete[] argv;
             close(errpipe[0]);
             close(errpipe[1]);
             throw process_spawn_error("Unable to create pipes during process creation");
@@ -119,17 +116,15 @@ static pid_t spawnvp_posix(const char* file, char* const* argv) {
     }
 
     pid_t pid = fork();
-    if(pid == -1) {
-        delete[] argv;
+    if(pid == -1)
         throw process_spawn_error("Unable to create a new process");
-    } else if(pid == 0) {
+    else if(pid == 0) {
         close(errpipe[0]);
         int exec_err = execvp(file, argv);
         write(errpipe[1], &exec_err, sizeof exec_err);
         _exit(255);
         abort();
     } else {
-        delete[] argv;
         close(errpipe[1]);
         int exec_err = 0;
         if(read(errpipe[0], &exec_err, sizeof exec_err) != 0) {
