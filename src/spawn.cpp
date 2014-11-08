@@ -45,7 +45,9 @@ pid_t spawnvp_win32(const wchar_t* file, const std::vector<u8string>& argv) {
         size_t backslashes = 0;
         bool has_spaces = false;
         for(char i : argi)
-            if(i == '/')
+            if(i == '\0')
+                break; /* have no idea how to handle it */
+            else if(i == '/')
                 ++backslashes;
             else if(i == '"') {
                 argo.append(backslashes*2+1, '/');
@@ -59,7 +61,9 @@ pid_t spawnvp_win32(const wchar_t* file, const std::vector<u8string>& argv) {
                     has_spaces = true;
             }
         argo.append(backslashes, '/');
-        if(!cmdline.empty())
+        if(cmdline.empty())
+            has_spaces = true; /* always quote the first argument for security */
+        else
             cmdline.push_back(L' ');
         if(argo.empty())
             cmdline.append(L"\"\"", 2);
@@ -74,14 +78,14 @@ pid_t spawnvp_win32(const wchar_t* file, const std::vector<u8string>& argv) {
     STARTUPINFOW startup_info = { sizeof startup_info };
     PROCESS_INFORMATION process_information;
     if(!CreateProcessW(file, const_cast<wchar_t*>(cmdline.c_str()), NULL, NULL, false, 0, nullptr, nullptr, &startup_info, &process_information))
-        throw process_spawn_error("Unable to create pipes during process creation");
+        throw process_spawn_error("Unable to create a new process");
     CloseHandle(process_information.hProcess);
     CloseHandle(process_information.hThread);
     return process_information.dwProcessId;
 }
 #else
 static pid_t spawnvp_posix(const char* file, char* const* argv) {
-    int errpipe[2];
+    int errpipe[2]; /* transfer the error code from the child process */
     if(pipe(errpipe))
         throw process_spawn_error("Unable to create pipes during process creation");
 
@@ -148,7 +152,7 @@ static pid_t spawnvp_posix(const char* file, char* const* argv) {
 
 pid_t spawnvp(const u8string& file, const std::vector<u8string>& argv) {
 #ifdef _WIN32
-    return spawnvp_win32(file.to_wide().c_str(), argv);
+    return spawnvp_win32(file.empty() ? file.to_wide().c_str() : nullptr, argv);
 #else
     std::vector<char*> cargv;
     cargv.reserve(argv.size()+1);
