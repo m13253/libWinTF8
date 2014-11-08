@@ -87,7 +87,7 @@ static pid_t spawnvp_posix(const char* file, char* const* argv) {
     {
         unsigned int low_fds_to_close = 0;
         bool errpipe_fail = false;
-        while(errpipe[1] < 3 || !errpipe_fail) {
+        while(errpipe[1] < 3 && !errpipe_fail) {
             int newfd = dup(errpipe[1]);
             if(newfd != -1) {
                 low_fds_to_close |= 1<<errpipe[1];
@@ -120,7 +120,8 @@ static pid_t spawnvp_posix(const char* file, char* const* argv) {
         throw process_spawn_error("Unable to create a new process");
     else if(pid == 0) {
         close(errpipe[0]);
-        int exec_err = execvp(file, argv);
+        execvp(file, argv);
+        int exec_err = errno;
         write(errpipe[1], &exec_err, sizeof exec_err);
         _exit(255);
         abort();
