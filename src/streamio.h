@@ -35,10 +35,16 @@ public:
     explicit basic_ifstream(const char* filename, std::ios_base::openmode mode = std::ios_base::in) :
         std::basic_ifstream<CharT, Traits>(u8string(filename).to_wide(true), mode) {
     }
+    explicit basic_ifstream(const std::string& filename, std::ios_base::openmode mode = std::ios_base::in) :
+        std::basic_ifstream<CharT, Traits>(u8string(filename).to_wide(true), mode) {
+    }
     explicit basic_ifstream(const u8string& filename, std::ios_base::openmode mode = std::ios_base::in) :
         std::basic_ifstream<CharT, Traits>(filename.to_wide(true), mode) {
     }
     void open(const char* filename, std::ios_base::openmode mode = std::ios_base::in) {
+        std::basic_ifstream<CharT, Traits>::open(u8string(filename).to_wide(true), mode);
+    }
+    void open(const std::string& filename, std::ios_base::openmode mode = std::ios_base::in) {
         std::basic_ifstream<CharT, Traits>::open(u8string(filename).to_wide(true), mode);
     }
     void open(const u8string& filename, std::ios_base::openmode mode = std::ios_base::in) {
@@ -62,10 +68,16 @@ public:
     explicit basic_ofstream(const char* filename, std::ios_base::openmode mode = std::ios_base::out) :
         std::basic_ofstream<CharT, Traits>(u8string(filename).to_wide(true), mode) {
     }
+    explicit basic_ofstream(const std::string& filename, std::ios_base::openmode mode = std::ios_base::out) :
+        std::basic_ofstream<CharT, Traits>(u8string(filename).to_wide(true), mode) {
+    }
     explicit basic_ofstream(const u8string& filename, std::ios_base::openmode mode = std::ios_base::out) :
         std::basic_ofstream<CharT, Traits>(filename.to_wide(true), mode) {
     }
     void open(const char* filename, std::ios_base::openmode mode = std::ios_base::out) {
+        std::basic_ofstream<CharT, Traits>::open(u8string(filename).to_wide(true), mode);
+    }
+    void open(const std::string& filename, std::ios_base::openmode mode = std::ios_base::in | std::ios_base::out) {
         std::basic_ofstream<CharT, Traits>::open(u8string(filename).to_wide(true), mode);
     }
     void open(const u8string& filename, std::ios_base::openmode mode = std::ios_base::in | std::ios_base::out) {
@@ -89,10 +101,16 @@ public:
     explicit basic_fstream(const char* filename, std::ios_base::openmode mode = std::ios_base::in | std::ios_base::out) :
         std::basic_fstream<CharT, Traits>(u8string(filename).to_wide(true), mode) {
     }
+    explicit basic_fstream(const std::string& filename, std::ios_base::openmode mode = std::ios_base::in | std::ios_base::out) :
+        std::basic_fstream<CharT, Traits>(u8string(filename).to_wide(true), mode) {
+    }
     explicit basic_fstream(const u8string& filename, std::ios_base::openmode mode = std::ios_base::in | std::ios_base::out) :
         std::basic_fstream<CharT, Traits>(filename.to_wide(true), mode) {
     }
     void open(const char* filename, std::ios_base::openmode mode = std::ios_base::in | std::ios_base::out) {
+        std::basic_fstream<CharT, Traits>::open(u8string(filename).to_wide(true), mode);
+    }
+    void open(const std::string& filename, std::ios_base::openmode mode = std::ios_base::in | std::ios_base::out) {
         std::basic_fstream<CharT, Traits>::open(u8string(filename).to_wide(true), mode);
     }
     void open(const u8string& filename, std::ios_base::openmode mode = std::ios_base::in | std::ios_base::out) {
