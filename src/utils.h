@@ -43,6 +43,7 @@ static inline T clamp(T value, T a, T b) {
         value < b ? b : a < value ? a : value;
 }
 
+/* something similar to strdup */
 template <typename charT>
 static charT* new_c_str(const std::basic_string<charT>& s) {
     charT* result = new charT[s.length()+1];

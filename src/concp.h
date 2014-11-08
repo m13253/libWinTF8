@@ -23,6 +23,7 @@
 #ifdef __cplusplus
 namespace WTF8 {
 
+/* return true once when changes are made */
 bool init_console();
 
 class InitConsole {
