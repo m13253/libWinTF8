@@ -79,7 +79,7 @@ pid_t spawnvp_win32(const wchar_t* file, const std::vector<u8string>& argv) {
     return process_information.dwProcessId;
 }
 #else
-static pid_t spawnvp_unix(const char* file, char* const* argv) {
+static pid_t spawnvp_posix(const char* file, char* const* argv) {
     int errpipe[2];
     if(pipe(errpipe)) {
         delete[] argv;
@@ -152,7 +152,7 @@ pid_t spawnvp(const u8string& file, const std::vector<u8string>& argv) {
     for(size_t i = 0; i < argv.size(); ++i)
         cargv.push_back(const_cast<char*>(argv.at(i).c_str()));
     cargv.push_back(nullptr);
-    return spawnvp_unix(file.c_str(), cargv.data());
+    return spawnvp_posix(file.c_str(), cargv.data());
 #endif
 }
 
@@ -205,7 +205,7 @@ pid_t WTF8_spawnvp(const char *file, char *const *argv) {
         vargv.push_back(WTF8::u8string(argv[i]));
     return WTF8::spawnvp_win32(WTF8::u8string(file).to_wide().c_str(), vargv);
 #else
-    return WTF8::spawnvp_unix(file, argv);
+    return WTF8::spawnvp_posix(file, argv);
 #endif
 }
 
