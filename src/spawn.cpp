@@ -38,6 +38,7 @@ namespace WTF8 {
 
 #ifdef _WIN32
 pid_t spawnvp_win32(const wchar_t* file, const std::vector<u8string>& argv) {
+    /* http://msdn.microsoft.com/en-us/library/17w5ykft.aspx */
     std::wstring cmdline;
     for(const u8string& argi : argv) {
         u8string argo;
@@ -87,6 +88,7 @@ static pid_t spawnvp_posix(const char* file, char* const* argv) {
     {
         unsigned int low_fds_to_close = 0;
         bool errpipe_fail = false;
+        /* errpipe[1] should not occupy 0, 1, 2 */
         while(errpipe[1] < 3 && !errpipe_fail) {
             int newfd = dup(errpipe[1]);
             if(newfd != -1) {
@@ -122,13 +124,18 @@ static pid_t spawnvp_posix(const char* file, char* const* argv) {
         close(errpipe[0]);
         execvp(file, argv);
         int exec_err = errno;
-        write(errpipe[1], &exec_err, sizeof exec_err);
+        while(write(errpipe[1], &exec_err, sizeof exec_err) == -1 && errno == EINTR) {
+        }
+        close(errpipe[1]);
         _exit(255);
         abort();
     } else {
         close(errpipe[1]);
         int exec_err = 0;
-        if(read(errpipe[0], &exec_err, sizeof exec_err) != 0) {
+        ssize_t bytes_read;
+        while((bytes_read = read(errpipe[0], &exec_err, sizeof exec_err)) == -1 && errno == EINTR) {
+        }
+        if(bytes_read != 0) {
             close(errpipe[0]);
             errno = exec_err;
             throw process_spawn_error("Unable to create a new process");
