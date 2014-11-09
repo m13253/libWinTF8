@@ -37,7 +37,7 @@
 namespace WTF8 {
 
 #ifdef _WIN32
-static pid_t spawnvp_win32(const wchar_t* file, const std::vector<u8string>& argv) {
+static WTF8_pid_t spawnvp_win32(const wchar_t* file, const std::vector<u8string>& argv) {
     /* http://msdn.microsoft.com/en-us/library/17w5ykft.aspx */
     std::wstring cmdline;
     for(const u8string& argi : argv) {
@@ -84,7 +84,7 @@ static pid_t spawnvp_win32(const wchar_t* file, const std::vector<u8string>& arg
     return process_information.dwProcessId;
 }
 #else
-static pid_t spawnvp_posix(const char* file, char* const* argv) {
+static WTF8_pid_t spawnvp_posix(const char* file, char* const* argv) {
     int errpipe[2]; /* transfer the error code from the child process */
     if(pipe(errpipe))
         throw process_spawn_error("Unable to create pipes during process creation");
@@ -150,7 +150,7 @@ static pid_t spawnvp_posix(const char* file, char* const* argv) {
 }
 #endif
 
-pid_t spawnvp(const u8string& file, const std::vector<u8string>& argv) {
+WTF8_pid_t spawnvp(const u8string& file, const std::vector<u8string>& argv) {
 #ifdef _WIN32
     return spawnvp_win32(file.empty() ? nullptr : file.to_wide().c_str(), argv);
 #else
@@ -163,7 +163,7 @@ pid_t spawnvp(const u8string& file, const std::vector<u8string>& argv) {
 #endif
 }
 
-bool waitpid(pid_t pid, int* exit_code) {
+bool waitpid(WTF8_pid_t pid, int* exit_code) {
 #ifdef _WIN32
     HANDLE process = OpenProcess(SYNCHRONIZE | (exit_code ? PROCESS_QUERY_INFORMATION : 0), false, pid);
     if(!process || WaitForSingleObject(process, INFINITE) == WAIT_FAILED)
@@ -192,7 +192,7 @@ bool waitpid(pid_t pid, int* exit_code) {
 #endif
 }
 
-bool kill(pid_t pid, bool force) {
+bool kill(WTF8_pid_t pid, bool force) {
 #ifdef _WIN32
     HANDLE process = OpenProcess(PROCESS_TERMINATE, false, pid);
     return process && TerminateProcess(process, -(UINT) 1);
@@ -205,7 +205,7 @@ bool kill(pid_t pid, bool force) {
 
 extern "C" {
 
-pid_t WTF8_spawnvp(const char *file, char *const *argv) {
+WTF8_pid_t WTF8_spawnvp(const char *file, char *const *argv) {
 #ifdef _WIN32
     std::vector<WTF8::u8string> vargv;
     for(size_t i = 0; argv[i]; ++i)
@@ -216,11 +216,11 @@ pid_t WTF8_spawnvp(const char *file, char *const *argv) {
 #endif
 }
 
-int WTF8_waitpid(pid_t pid) {
+int WTF8_waitpid(WTF8_pid_t pid) {
     return WTF8::waitpid(pid);
 }
 
-int WTF8_kill(pid_t pid, int force) {
+int WTF8_kill(WTF8_pid_t pid, int force) {
     return WTF8::kill(pid, force != 0);
 }
 

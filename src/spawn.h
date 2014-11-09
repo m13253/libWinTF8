@@ -39,15 +39,15 @@ public:
 };
 
 #ifdef _WIN32
-typedef uint32_t pid_t;
+typedef uint32_t WTF8_pid_t;
 #else
-typedef int pid_t;
+typedef int WTF8_pid_t;
 #endif
 
-pid_t spawnvp(const u8string& file, const std::vector<u8string>& argv);
+WTF8_pid_t spawnvp(const u8string& file, const std::vector<u8string>& argv);
 
-bool waitpid(pid_t pid, int* exit_code = nullptr);
-bool kill(pid_t pid, bool force = false);
+bool waitpid(WTF8_pid_t pid, int* exit_code = nullptr);
+bool kill(WTF8_pid_t pid, bool force = false);
 
 }
 #endif
@@ -55,9 +55,9 @@ bool kill(pid_t pid, bool force = false);
 #ifdef __cplusplus
 extern "C" {
 #endif
-pid_t WTF8_spawnvp(const char *file, char *const *argv);
-int WTF8_waitpid(pid_t pid);
-int WTF8_kill(pid_t pid, int force);
+WTF8_pid_t WTF8_spawnvp(const char *file, char *const *argv);
+int WTF8_waitpid(WTF8_pid_t pid);
+int WTF8_kill(WTF8_pid_t pid, int force);
 #ifdef __cplusplus
 }
 #endif
