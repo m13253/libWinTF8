@@ -197,7 +197,7 @@ bool kill(pid_t pid, bool force) {
     HANDLE process = OpenProcess(PROCESS_TERMINATE, false, pid);
     return process && TerminateProcess(process, -(UINT) 1);
 #else
-    return kill(pid, force ? SIGKILL : SIGTERM) == 0;
+    return ::kill(pid, force ? SIGKILL : SIGTERM) == 0;
 #endif
 }
 
