@@ -29,6 +29,12 @@
 #endif
 #include "u8str.h"
 
+#ifdef _WIN32
+typedef uint32_t WTF8_pid_t;
+#else
+typedef int WTF8_pid_t;
+#endif
+
 #ifdef __cplusplus
 namespace WTF8 {
 
@@ -37,12 +43,6 @@ class process_spawn_error : public std::runtime_error {
 public:
     process_spawn_error() : runtime_error("Unable to create a new process") {}
 };
-
-#ifdef _WIN32
-typedef uint32_t WTF8_pid_t;
-#else
-typedef int WTF8_pid_t;
-#endif
 
 WTF8_pid_t spawnvp(const u8string& file, const std::vector<u8string>& argv);
 
