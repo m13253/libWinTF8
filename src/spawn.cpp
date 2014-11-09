@@ -37,7 +37,7 @@
 namespace WTF8 {
 
 #ifdef _WIN32
-pid_t spawnvp_win32(const wchar_t* file, const std::vector<u8string>& argv) {
+static pid_t spawnvp_win32(const wchar_t* file, const std::vector<u8string>& argv) {
     /* http://msdn.microsoft.com/en-us/library/17w5ykft.aspx */
     std::wstring cmdline;
     for(const u8string& argi : argv) {
