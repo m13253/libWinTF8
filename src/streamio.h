@@ -126,6 +126,24 @@ public:
 #endif
 };
 
+template<typename CharT, typename Traits = std::char_traits<CharT> >
+class basic_filebuf : public std::basic_filebuf<CharT, Traits> {
+public:
+    using std::basic_filebuf<CharT, Traits>::basic_filebuf;
+#ifdef _WIN32
+    basic_filebuf* open(const char* filename, std::ios_base::openmode mode) {
+        return std::basic_filebuf<CharT, Traits>::open(u8string(filename).to_wide(true), mode) ? this : nullptr;
+    }
+    basic_filebuf* open(const u8string& filename, std::ios_base::openmode mode) {
+        return std::basic_filebuf<CharT, Traits>::open(filename.to_wide(true), mode) ? this : nullptr;
+    }
+#else
+    basic_filebuf* open(const u8string& filename, std::ios_base::openmode mode) {
+        return std::basic_filebuf<CharT, Traits>::open(static_cast<std::string>(filename), mode) ? this : nullptr;
+    }
+#endif
+};
+
 typedef basic_ifstream<char>    ifstream;
 typedef basic_ofstream<char>    ofstream;
 typedef basic_fstream<char>     fstream;
