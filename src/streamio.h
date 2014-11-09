@@ -150,6 +150,8 @@ typedef basic_fstream<char>     fstream;
 typedef basic_ifstream<wchar_t> wifstream;
 typedef basic_ofstream<wchar_t> wofstream;
 typedef basic_fstream<wchar_t>  wfstream;
+typedef basic_filebuf<char>     filebuf;
+typedef basic_filebuf<wchar_t>  wfilebuf;
 
 }
 #endif
