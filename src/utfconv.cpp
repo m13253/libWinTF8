@@ -170,7 +170,7 @@ size_t WTF8_utf8_to_wide(wchar_t *widestr, const char *utf8str, int strict, size
     try {
         std::wstring widestrpp = WTF8::utf8_to_wide(WTF8::u8string(utf8str), strict != 0);
         if(widestr && bufsize != 0) {
-            std::memcpy(widestr, widestrpp.data(), WTF8::min(widestrpp.length(), bufsize-1)*sizeof (wchar_t));
+            std::memcpy(widestr, widestrpp.data(), WTF8::min(widestrpp.size(), bufsize-1)*sizeof (wchar_t));
             widestr[WTF8::min(widestrpp.size(), bufsize)] = L'\0';
         }
         return widestrpp.size();
@@ -183,7 +183,7 @@ size_t WTF8_wide_to_utf8(char *utf8str, const wchar_t *widestr, int strict, size
     try {
         WTF8::u8string utf8strpp = WTF8::wide_to_utf8(std::wstring(widestr), strict != 0);
         if(utf8str && bufsize != 0) {
-            std::memcpy(utf8str, utf8strpp.data(), WTF8::min(utf8strpp.length(), bufsize-1)*sizeof (char));
+            std::memcpy(utf8str, utf8strpp.data(), WTF8::min(utf8strpp.size(), bufsize-1)*sizeof (char));
             utf8str[WTF8::min(utf8strpp.size(), bufsize)] = '\0';
         }
         return utf8strpp.size();
