@@ -64,7 +64,7 @@ public:
         return hasher(s);
     }
 private:
-    std::hash<std::string> hasher;
+    static std::hash<std::string> hasher;
 };
 
 }
