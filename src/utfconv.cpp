@@ -45,28 +45,28 @@ std::wstring utf8_to_wide(const u8string& utf8str, bool strict) {
         } else if(uint8_t(utf8str[i]) < 0xc0) {
         } else if(uint8_t(utf8str[i]) < 0xe0) {
             if(utf8_check_continuation(utf8str, i, 1)) {
-                uint32_t ucs4 = (utf8str[i] & 0x1f) << 6 | (utf8str[i+1] & 0x3f);
+                uint32_t ucs4 = uint32_t(utf8str[i] & 0x1f) << 6 | uint32_t(utf8str[i+1] & 0x3f);
                 if(ucs4 >= 0x80) {
-                    widestr.push_back(ucs4);
+                    widestr.push_back(wchar_t(ucs4));
                     i += 2;
                     continue;
                 }
             }
         } else if(uint8_t(utf8str[i]) < 0xf0) {
             if(utf8_check_continuation(utf8str, i, 2)) {
-                uint32_t ucs4 = (utf8str[i] & 0xf) << 12 | (utf8str[i+1] & 0x3f) << 6 | (utf8str[i+2] & 0x3f);
+                uint32_t ucs4 = uint32_t(utf8str[i] & 0xf) << 12 | uint32_t(utf8str[i+1] & 0x3f) << 6 | (utf8str[i+2] & 0x3f);
                 if(ucs4 >= 0x800 && (ucs4 & 0xf800) != 0xd800) {
-                    widestr.push_back(ucs4);
+                    widestr.push_back(wchar_t(ucs4));
                     i += 3;
                     continue;
                 }
             }
         } else if(uint8_t(utf8str[i]) < 0xf8) {
             if(utf8_check_continuation(utf8str, i, 3)) {
-                uint32_t ucs4 = (utf8str[i] & 0x7) << 18 | (utf8str[i+1] & 0x3f) << 12 | (utf8str[i+2] & 0x3f) << 6 | (utf8str[i+3] & 0x3f);
+                uint32_t ucs4 = uint32_t(utf8str[i] & 0x7) << 18 | uint32_t(utf8str[i+1] & 0x3f) << 12 | uint32_t(utf8str[i+2] & 0x3f) << 6 | uint32_t(utf8str[i+3] & 0x3f);
                 if(ucs4 >= 0x10000 && ucs4 < 0x110000) {
                     if(sizeof (wchar_t) >= 4)
-                        widestr.push_back(ucs4);
+                        widestr.push_back(wchar_t(ucs4));
                     else {
                         ucs4 -= 0x10000;
                         widestr.append({

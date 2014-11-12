@@ -96,7 +96,7 @@ static WTF8_pid_t spawnvp_posix(const char* file, char* const* argv) {
         while(errpipe[1] < 3 && !errpipe_fail) {
             int newfd = dup(errpipe[1]);
             if(newfd != -1) {
-                low_fds_to_close |= 1<<errpipe[1];
+                low_fds_to_close |= 1U<<errpipe[1];
                 errpipe[1] = newfd;
             } else {
                 close(errpipe[0]);
