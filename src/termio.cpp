@@ -16,37 +16,34 @@
   IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED
   WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 */
-#include "utils.h"
-#include "concp.h"
+
+#include <istream>
+#include <ostream>
+#include "termio.h"
 
 #ifdef _WIN32
+#include <streambuf>
 #include <windows.h>
+#else
+#include <iostream>
 #endif
 
 namespace WTF8 {
 
 #ifdef _WIN32
-static bool cp_already_set = false;
+
+class ConsoleOutputBuffer : public std::streambuf {
+};
+class ConsoleInputBuffer : public std::streambuf {
+};
+
+#else
+
+std::istream& cin = std::cin;
+std::ostream& cout = std::cout;
+std::ostream& cerr = std::cerr;
+std::ostream& clog = std::clog;
+
 #endif
-
-bool init_console() {
-#ifdef _WIN32
-    if(!cp_already_set) {
-        cp_already_set = true;
-        SetConsoleOutputCP(65001);
-        SetConsoleCP(65001);
-        return true;
-    }
-#endif
-    return false;
-}
-
-}
-
-extern "C" {
-
-int WTF8_init_console(void) {
-    return WTF8::init_console();
-}
 
 }

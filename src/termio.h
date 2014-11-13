@@ -17,33 +17,21 @@
   WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 */
 #pragma once
-#ifndef WTF8_CONCP_H_INCLUDED_
-#define WTF8_CONCP_H_INCLUDED_
+#ifndef WTF8_TERMIO_H_INCLUDED_
+#define WTF8_TERMIO_H_INCLUDED_
 
 #ifdef __cplusplus
+#include <istream>
+#include <ostream>
+
 namespace WTF8 {
 
-/* return true once when changes are made */
-bool init_console();
+extern std::istream& cin;
+extern std::ostream& cout;
+extern std::ostream& cerr;
+extern std::ostream& clog;
 
-class InitConsole {
-public:
-#ifdef _WIN32
-    InitConsole() {
-        init_console();
-    }
-#endif
 };
-
-}
-#endif
-
-#ifdef __cplusplus
-extern "C" {
-#endif
-int WTF8_init_console(void);
-#ifdef __cplusplus
-}
 #endif
 
 #endif
