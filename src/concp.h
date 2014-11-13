@@ -17,17 +17,33 @@
   WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 */
 #pragma once
-#ifndef WTF8_H_INCLUDED_
-#define WTF8_H_INCLUDED_
+#ifndef WTF8_CONCP_H_INCLUDED_
+#define WTF8_CONCP_H_INCLUDED_
 
-#include "libwintf8/argv.h"
-#include "libwintf8/concp.h"
-#include "libwintf8/env.h"
-#include "libwintf8/fileio.h"
-#include "libwintf8/spawn.h"
-#include "libwintf8/streamio.h"
-#include "libwintf8/termio.h"
-#include "libwintf8/u8str.h"
-#include "libwintf8/utfconv.h"
+#ifdef __cplusplus
+namespace WTF8 {
+
+/* return true once when changes are made */
+bool init_console();
+
+class InitConsole {
+public:
+#ifdef _WIN32
+    InitConsole() {
+        init_console();
+    }
+#endif
+};
+
+}
+#endif
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+int WTF8_init_console(void);
+#ifdef __cplusplus
+}
+#endif
 
 #endif

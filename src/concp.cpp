@@ -16,18 +16,37 @@
   IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED
   WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 */
-#pragma once
-#ifndef WTF8_H_INCLUDED_
-#define WTF8_H_INCLUDED_
+#include "utils.h"
+#include "concp.h"
 
-#include "libwintf8/argv.h"
-#include "libwintf8/concp.h"
-#include "libwintf8/env.h"
-#include "libwintf8/fileio.h"
-#include "libwintf8/spawn.h"
-#include "libwintf8/streamio.h"
-#include "libwintf8/termio.h"
-#include "libwintf8/u8str.h"
-#include "libwintf8/utfconv.h"
-
+#ifdef _WIN32
+#include <windows.h>
 #endif
+
+namespace WTF8 {
+
+#ifdef _WIN32
+static bool cp_already_set = false;
+#endif
+
+bool init_console() {
+#ifdef _WIN32
+    if(!cp_already_set) {
+        cp_already_set = true;
+        SetConsoleOutputCP(65001);
+        SetConsoleCP(65001);
+        return true;
+    }
+#endif
+    return false;
+}
+
+}
+
+extern "C" {
+
+int WTF8_init_console(void) {
+    return WTF8::init_console();
+}
+
+}
