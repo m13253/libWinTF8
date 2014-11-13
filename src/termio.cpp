@@ -30,6 +30,7 @@
 #include <cstddef>
 #include <ios>
 #include <memory>
+#include <string>
 #include <streambuf>
 #include <vector>
 #include <windows.h>
@@ -45,10 +46,94 @@ public:
         WTF8_handle(handle) {
         DWORD dummy;
         WTF8_is_console = GetConsoleMode(handle, &dummy);
+        if(WTF8_is_console)
+            WTF8_wbuffer.resize(1024);
+        else
+            WTF8_buffer.reserve(1024);
+        setg(nullptr, nullptr, nullptr);
+    }
+protected:
+    std::streambuf *setbuf(char *buffer, std::streamsize size) {
+        if(size == 0)
+            size = 1024;
+        /* only use the size parameter */
+        if(WTF8_is_console) {
+            WTF8_wbuffer.resize(size);
+            WTF8_wbuffer.shrink_to_fit();
+        } else {
+            WTF8_buffer.resize(0);
+            WTF8_buffer.reserve(size);
+        }
+        WTF8_buffer_size = size;
+        return this;
+    }
+    int underflow() {
+        if(has_last_putback) {
+            if(gptr() != egptr())
+                return last_putback;
+            else
+                setg(WTF8_buffer.data(), WTF8_buffer.data(), WTF8_buffer.data()+WTF8_buffer.size());
+        }
+        if(gptr() == egptr()) {
+            if(read() == -1)
+                return EOF;
+            if(gptr() == egptr())
+                return EOF;
+        }
+        return std::char_traits<char>::to_int_type(*gptr());
+    }
+    int pbackfail(int c = EOF) {
+        if(has_last_putback)
+            return EOF;
+        else if(gptr() != eback()) {
+            gptr()[-1] = char(c);
+            gbump(-1);
+            return c;
+        } else {
+            has_last_putback = true;
+            last_putback = c;
+            setg(&last_putback, &last_putback, &last_putback+1);
+            return c;
+        }
     }
 private:
+    ssize_t read() {
+        if(WTF8_is_console) {
+            DWORD wchars_read = 0;
+            if(last_surrogate_pair == L'\0') {
+                if(!ReadConsole(WTF8_handle, WTF8_wbuffer.data(), WTF8_buffer_size, &wchars_read, nullptr))
+                    return -1;
+            } else {
+                WTF8_wbuffer[0] = last_surrogate_pair;
+                if(!ReadConsole(WTF8_handle, WTF8_wbuffer.data()+1, WTF8_buffer_size-1, &wchars_read, nullptr))
+                    return -1;
+                ++wchars_read;
+            }
+            if(uint16_t(WTF8_wbuffer[WTF8_buffer_size-1] & 0xfc00) == 0xd800) {
+                last_surrogate_pair = WTF8_wbuffer[WTF8_buffer_size-1];
+                --wchars_read;
+            } else
+                last_surrogate_pair = L'\0';
+            u8string WTF8_sbuffer = u8string::from_wide(std::wstring(WTF8_wbuffer.data(), wchars_read));
+            WTF8_buffer.assign(WTF8_sbuffer.cbegin(), WTF8_sbuffer.cend());
+        } else {
+            DWORD bytes_read = 0;
+            WTF8_buffer.resize(WTF8_buffer_size);
+            if(!ReadFile(WTF8_handle, WTF8_buffer.data(), WTF8_buffer.size(), &bytes_read, nullptr))
+                return -1;
+            WTF8_buffer.resize(bytes_read);
+        }
+        setg(WTF8_buffer.data(), WTF8_buffer.data(), WTF8_buffer.data()+WTF8_buffer.size());
+        return WTF8_buffer.size();
+    }
     HANDLE WTF8_handle;
     bool WTF8_is_console;
+    std::vector<char> WTF8_buffer;
+    std::vector<wchar_t> WTF8_wbuffer;
+    wchar_t last_surrogate_pair = L'\0';
+    bool has_last_putback = false;
+    char last_putback;
+    std::streamsize WTF8_buffer_size = 1024;
 };
 
 class ConsoleOutputBuffer : public std::streambuf {
@@ -61,7 +146,13 @@ public:
     }
 protected:
     std::streambuf *setbuf(char *buffer, std::streamsize size) {
-        if(!WTF8_init_buffer.empty()) {
+        sync();
+        if(size == 0) {
+            WTF8_init_buffer.resize(1024);
+            WTF8_init_buffer.shrink_to_fit();
+            buffer = WTF8_init_buffer.data();
+            size = 1024;
+        } else if(!WTF8_init_buffer.empty()) {
             WTF8_init_buffer.resize(0);
             WTF8_init_buffer.shrink_to_fit();
         }
