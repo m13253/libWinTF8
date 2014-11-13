@@ -33,18 +33,18 @@ public:
     using std::string::string;
     explicit u8string() : std::string() {
     }
-    explicit u8string(const std::string& s) :
+    explicit u8string(const std::string &s) :
         std::string(s) {
     }
-    explicit u8string(std::string&& s) :
+    explicit u8string(std::string &&s) :
         std::string(std::move(s)) {
     }
-    u8string(const std::wstring& s, bool strict = false);
-    u8string(const wchar_t* s, bool strict = false);
-    static u8string from_wide(const std::wstring& s, bool strict = false) {
+    u8string(const std::wstring &s, bool strict = false);
+    u8string(const wchar_t *s, bool strict = false);
+    static u8string from_wide(const std::wstring &s, bool strict = false) {
         return u8string(s, strict);
     }
-    static u8string from_wide(const wchar_t* s, bool strict = false) {
+    static u8string from_wide(const wchar_t *s, bool strict = false) {
         return u8string(s, strict);
     }
     std::wstring to_wide(bool strict = false) const;
@@ -60,7 +60,7 @@ namespace std {
 template<>
 struct hash<WTF8::u8string> {
 public:
-    size_t operator()(const WTF8::u8string& s) const {
+    size_t operator()(const WTF8::u8string &s) const {
         return hasher(s);
     }
 private:

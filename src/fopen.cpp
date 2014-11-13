@@ -25,7 +25,7 @@
 
 namespace WTF8 {
 
-std::FILE* fopen(const char* path, const char* mode) {
+std::FILE *fopen(const char *path, const char *mode) {
 #ifdef _WIN32
     try {
         return _wfopen(u8string(path).to_wide(true).c_str(), u8string(mode).to_wide(true).c_str());

@@ -44,9 +44,9 @@ public:
     process_spawn_error() : runtime_error("Unable to create a new process") {}
 };
 
-WTF8_pid_t spawnvp(const u8string& file, const std::vector<u8string>& argv);
+WTF8_pid_t spawnvp(const u8string &file, const std::vector<u8string> &argv);
 
-bool waitpid(WTF8_pid_t pid, int* exit_code = nullptr);
+bool waitpid(WTF8_pid_t pid, int *exit_code = nullptr);
 bool kill(WTF8_pid_t pid, bool force = false);
 
 }

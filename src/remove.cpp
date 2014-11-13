@@ -25,7 +25,7 @@
 
 namespace WTF8 {
 
-int remove(const char* path) {
+int remove(const char *path) {
 #ifdef _WIN32
     try {
         return _wremove(u8string(path).to_wide(true).c_str());

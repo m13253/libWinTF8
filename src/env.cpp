@@ -30,20 +30,20 @@ namespace WTF8 {
 static std::unordered_map<u8string, u8string> env_cache;
 #endif
 
-char* getenv(const char* varname, bool ignore_cache = false) {
+char *getenv(const char *varname, bool ignore_cache = false) {
     using namespace std;
 #ifdef _WIN32
     u8string varname_(varname);
     if(!ignore_cache)
         try {
-            return const_cast<char*>(env_cache.at(varname_).c_str());
+            return const_cast<char *>(env_cache.at(varname_).c_str());
         } catch(std::out_of_range) {
         }
-    wchar_t* result = _wgetenv(varname_.to_wide().c_str());
+    wchar_t *result = _wgetenv(varname_.to_wide().c_str());
     if(result) {
         u8string& cache_item = env_cache[varname_];
         cache_item = u8string(result);
-        return const_cast<char*>(cache_item.c_str());
+        return const_cast<char *>(cache_item.c_str());
     } else
         return nullptr;
 #else
@@ -52,10 +52,10 @@ char* getenv(const char* varname, bool ignore_cache = false) {
 #endif
 }
 
-int putenv(const char* envstring) {
+int putenv(const char *envstring) {
     using namespace std;
 #ifdef _WIN32
-    const char* equal_sign = std::strchr(envstring, '=');
+    const char *equal_sign = std::strchr(envstring, '=');
     if(equal_sign) {
         env_cache.erase(u8string(envstring, equal_sign-envstring));
         return _wputenv(u8string(envstring).to_wide().c_str());

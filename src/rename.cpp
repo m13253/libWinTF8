@@ -25,7 +25,7 @@
 
 namespace WTF8 {
 
-int rename(const char* oldname, const char* newname) {
+int rename(const char *oldname, const char *newname) {
 #ifdef _WIN32
     try {
         return _wrename(u8string(oldname).to_wide(true).c_str(), u8string(newname).to_wide(true).c_str());

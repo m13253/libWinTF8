@@ -27,8 +27,8 @@
 #include <windows.h>
 #elif defined(__APPLE__) && defined(__MACH__)
 extern "C" {
-    extern int* _NSGetArgc();
-    extern char*** _NSGetArgv();
+    extern int *_NSGetArgc();
+    extern char ***_NSGetArgv();
 }
 #endif
 
@@ -37,16 +37,16 @@ namespace WTF8 {
 std::vector<u8string> get_argv() {
 #if defined(_WIN32)
     int argc;
-    wchar_t** wargv = CommandLineToArgvW(GetCommandLineW(), &argc);
+    wchar_t **wargv = CommandLineToArgvW(GetCommandLineW(), &argc);
     std::vector<u8string> result;
     result.reserve(argc);
     for(int i = 0; i < argc; ++i)
         result.push_back(u8string::from_wide(wargv[i]));
-    LocalFree(static_cast<void*>(wargv));
+    LocalFree(static_cast<void *>(wargv));
     return result;
 #elif defined(__APPLE__) && defined(__MACH__)
     int argc = *_NSGetArgc();
-    char** argv = *_NSGetArgv();
+    char **argv = *_NSGetArgv();
     std::vector<u8string> result;
     result.reserve(argc);
     for(int i = 0; i < argc; ++i)
@@ -85,14 +85,14 @@ extern "C" {
 char **WTF8_get_argv(int *argc) {
 #if defined(_WIN32)
     int argc_;
-    wchar_t** wargv = CommandLineToArgvW(GetCommandLineW(), &argc_);
+    wchar_t **wargv = CommandLineToArgvW(GetCommandLineW(), &argc_);
     if(argc)
         *argc = argc_;
-    char** result = new char*[argc_+1];
+    char **result = new char *[argc_+1];
     for(int i = 0; i < argc_; ++i)
         result[i] = WTF8::new_c_str(WTF8::u8string::from_wide(wargv[i]));
     result[argc_] = nullptr;
-    LocalFree(static_cast<void*>(wargv));
+    LocalFree(static_cast<void *>(wargv));
     return result;
 #elif defined(__APPLE__) && defined(__MACH__)
     if(argc)
@@ -103,7 +103,7 @@ char **WTF8_get_argv(int *argc) {
         std::vector<WTF8::u8string> argv = WTF8::get_argv();
         if(argc)
             *argc = argv.size();
-        char** result = new char*[argv.size()+1];
+        char **result = new char *[argv.size()+1];
         for(size_t i = 0; i < argv.size(); ++i)
             result[i] = WTF8::new_c_str(argv.at(i));
         result[argv.size()] = nullptr;

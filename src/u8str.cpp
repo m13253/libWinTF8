@@ -22,11 +22,11 @@
 
 namespace WTF8 {
 
-u8string::u8string(const std::wstring& s, bool strict) :
+u8string::u8string(const std::wstring &s, bool strict) :
     u8string(wide_to_utf8(s, strict)) {
 }
 
-u8string::u8string(const wchar_t* s, bool strict) :
+u8string::u8string(const wchar_t *s, bool strict) :
     u8string(wide_to_utf8(std::wstring(s), strict)) {
 }
 

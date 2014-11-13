@@ -45,17 +45,17 @@ static inline T clamp(T value, T a, T b) {
 
 /* something similar to strdup */
 template <typename charT>
-static charT* new_c_str(const std::basic_string<charT>& s) {
-    charT* result = new charT[s.size()+1];
+static charT *new_c_str(const std::basic_string<charT> &s) {
+    charT *result = new charT[s.size()+1];
     std::memcpy(result, s.c_str(), s.size()+1);
     return result;
 }
 
 template <typename charT>
-static charT* new_c_str(const charT* s) {
+static charT *new_c_str(const charT *s) {
     if(s) {
         size_t length = std::strlen(s);
-        charT* result = new charT[length+1];
+        charT *result = new charT[length+1];
         std::memcpy(result, s, length+1);
         return result;
     } else
@@ -63,7 +63,7 @@ static charT* new_c_str(const charT* s) {
 }
 
 template <typename charT>
-static inline charT* delete_c_str(charT* s) {
+static inline charT *delete_c_str(charT *s) {
     if(s)
         delete[] s;
     return nullptr;

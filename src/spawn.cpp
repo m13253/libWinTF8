@@ -37,10 +37,10 @@
 namespace WTF8 {
 
 #ifdef _WIN32
-static WTF8_pid_t spawnvp_win32(const wchar_t* file, const std::vector<u8string>& argv) {
+static WTF8_pid_t spawnvp_win32(const wchar_t *file, const std::vector<u8string> &argv) {
     /* http://msdn.microsoft.com/en-us/library/17w5ykft.aspx */
     std::wstring cmdline;
-    for(const u8string& argi : argv) {
+    for(const u8string &argi : argv) {
         u8string argo;
         size_t backslashes = 0;
         bool has_spaces = false;
@@ -77,14 +77,14 @@ static WTF8_pid_t spawnvp_win32(const wchar_t* file, const std::vector<u8string>
     }
     STARTUPINFOW startup_info = { sizeof startup_info };
     PROCESS_INFORMATION process_information;
-    if(!CreateProcessW(file, const_cast<wchar_t*>(cmdline.c_str()), NULL, NULL, false, 0, nullptr, nullptr, &startup_info, &process_information))
+    if(!CreateProcessW(file, const_cast<wchar_t *>(cmdline.c_str()), NULL, NULL, false, 0, nullptr, nullptr, &startup_info, &process_information))
         throw process_spawn_error("Unable to create a new process");
     CloseHandle(process_information.hProcess);
     CloseHandle(process_information.hThread);
     return process_information.dwProcessId;
 }
 #else
-static WTF8_pid_t spawnvp_posix(const char* file, char* const* argv) {
+static WTF8_pid_t spawnvp_posix(const char *file, char *const *argv) {
     int errpipe[2]; /* transfer the error code from the child process */
     if(pipe(errpipe))
         throw process_spawn_error("Unable to create pipes during process creation");
@@ -96,7 +96,7 @@ static WTF8_pid_t spawnvp_posix(const char* file, char* const* argv) {
         while(errpipe[1] < 3 && !errpipe_fail) {
             int newfd = dup(errpipe[1]);
             if(newfd != -1) {
-                low_fds_to_close |= 1U<<errpipe[1];
+                low_fds_to_close |= 1U << errpipe[1];
                 errpipe[1] = newfd;
             } else {
                 close(errpipe[0]);
@@ -150,20 +150,20 @@ static WTF8_pid_t spawnvp_posix(const char* file, char* const* argv) {
 }
 #endif
 
-WTF8_pid_t spawnvp(const u8string& file, const std::vector<u8string>& argv) {
+WTF8_pid_t spawnvp(const u8string &file, const std::vector<u8string> &argv) {
 #ifdef _WIN32
     return spawnvp_win32(file.empty() ? nullptr : file.to_wide().c_str(), argv);
 #else
-    std::vector<char*> cargv;
+    std::vector<char *> cargv;
     cargv.reserve(argv.size()+1);
     for(size_t i = 0; i < argv.size(); ++i)
-        cargv.push_back(const_cast<char*>(argv.at(i).c_str()));
+        cargv.push_back(const_cast<char *>(argv.at(i).c_str()));
     cargv.push_back(nullptr);
     return spawnvp_posix(file.c_str(), cargv.data());
 #endif
 }
 
-bool waitpid(WTF8_pid_t pid, int* exit_code) {
+bool waitpid(WTF8_pid_t pid, int *exit_code) {
 #ifdef _WIN32
     HANDLE process = OpenProcess(SYNCHRONIZE | (exit_code ? PROCESS_QUERY_INFORMATION : 0), false, pid);
     if(!process || WaitForSingleObject(process, INFINITE) == WAIT_FAILED)

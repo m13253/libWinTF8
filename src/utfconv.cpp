@@ -23,7 +23,7 @@
 
 namespace WTF8 {
 
-static bool utf8_check_continuation(const u8string& utf8str, size_t start, size_t check_length) {
+static bool utf8_check_continuation(const u8string &utf8str, size_t start, size_t check_length) {
     if(utf8str.size() > start + check_length) {
         while(check_length--)
             if((uint8_t(utf8str[++start]) & 0xc0) != 0x80)
@@ -33,7 +33,7 @@ static bool utf8_check_continuation(const u8string& utf8str, size_t start, size_
         return false;
 }
 
-std::wstring utf8_to_wide(const u8string& utf8str, bool strict) {
+std::wstring utf8_to_wide(const u8string &utf8str, bool strict) {
     std::wstring widestr;
     size_t i = 0;
     widestr.reserve(utf8str.size()/2);
@@ -90,7 +90,7 @@ std::wstring utf8_to_wide(const u8string& utf8str, bool strict) {
     return widestr;
 }
 
-u8string wide_to_utf8(const std::wstring& widestr, bool strict) {
+u8string wide_to_utf8(const std::wstring &widestr, bool strict) {
     u8string utf8str;
     size_t i = 0;
     utf8str.reserve(widestr.size()*2);

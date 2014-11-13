@@ -39,10 +39,10 @@ class ConsoleInputBuffer : public std::streambuf {
 
 #else
 
-std::istream& cin = std::cin;
-std::ostream& cout = std::cout;
-std::ostream& cerr = std::cerr;
-std::ostream& clog = std::clog;
+std::istream &cin = std::cin;
+std::ostream &cout = std::cout;
+std::ostream &cerr = std::cerr;
+std::ostream &clog = std::clog;
 
 #endif
 

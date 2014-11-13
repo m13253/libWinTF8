@@ -22,8 +22,8 @@
 
 #ifdef __cplusplus
 namespace WTF8 {
-char* getenv(const char* varname, bool ignore_cache = false);
-int putenv(const char* envstring);
+char *getenv(const char *varname, bool ignore_cache = false);
+int putenv(const char *envstring);
 }
 #endif
 

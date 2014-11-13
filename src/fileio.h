@@ -28,11 +28,11 @@
 
 #ifdef __cplusplus
 namespace WTF8 {
-std::FILE* fopen(const char* path, const char* mode);
-std::FILE* freopen(const char* path, const char* mode, std::FILE* fp);
-std::FILE* fclose(std::FILE* fp);
-int remove(const char* path);
-int rename(const char* oldname, const char* newname);
+std::FILE *fopen(const char *path, const char *mode);
+std::FILE *freopen(const char *path, const char *mode, std::FILE *fp);
+std::FILE *fclose(std::FILE *fp);
+int remove(const char *path);
+int rename(const char *oldname, const char *newname);
 }
 #endif
 

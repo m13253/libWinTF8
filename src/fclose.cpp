@@ -22,7 +22,7 @@
 
 namespace WTF8 {
 
-std::FILE* fclose(std::FILE *fp) {
+std::FILE *fclose(std::FILE *fp) {
     std::fclose(fp);
     return nullptr;
 }
