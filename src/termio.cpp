@@ -109,10 +109,9 @@ private:
                     return -1;
                 ++wchars_read;
             }
-            if(uint16_t(WTF8_wbuffer[WTF8_buffer_size-1] & 0xfc00) == 0xd800) {
-                last_surrogate_pair = WTF8_wbuffer[WTF8_buffer_size-1];
-                --wchars_read;
-            } else
+            if(std::streamsize(wchars_read) == WTF8_buffer_size && uint16_t(WTF8_wbuffer[wchars_read-1] & 0xfc00) == 0xd800)
+                last_surrogate_pair = WTF8_wbuffer[--wchars_read];
+            else
                 last_surrogate_pair = L'\0';
             u8string WTF8_sbuffer = u8string::from_wide(std::wstring(WTF8_wbuffer.data(), wchars_read));
             WTF8_buffer.assign(WTF8_sbuffer.cbegin(), WTF8_sbuffer.cend());
