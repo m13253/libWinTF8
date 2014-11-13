@@ -17,6 +17,7 @@
   WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 */
 #include <cstddef>
+#include <cstdint>
 #include <cstring>
 #include "utils.h"
 #include "utfconv.h"

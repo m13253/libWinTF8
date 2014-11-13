@@ -22,6 +22,7 @@
 
 #ifdef __cplusplus
 #include <cstddef>
+#include <cstdint>
 #include <stdexcept>
 #include <vector>
 #else

@@ -122,6 +122,7 @@ private:
             else if(wchars_written == wbuf.size())
                 return size;
             else
+                /* UTF conversion error may happen, the accurate number of chars is unknown */
                 return min(u8string::from_wide(wbuf.substr(0, wchars_written)).size(), size);
         } else {
             DWORD bytes_written = 0;
