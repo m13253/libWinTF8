@@ -105,9 +105,7 @@ private:
         if(WTF8_is_console) {
             const char *last_char = buf+size;
             while(last_char != buf)
-                if(uint8_t(last_char[-1] & 0xc0) == 0x80)
-                    --last_char;
-                else
+                if(uint8_t(*--last_char & 0xc0) != 0x80)
                     break;
             if(last_char == buf)
                 last_char = buf+size;
