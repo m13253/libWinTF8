@@ -29,7 +29,7 @@ namespace WTF8 {
 static bool cp_already_set = false;
 #endif
 
-bool init_console() {
+bool set_console_utf8() {
 #ifdef _WIN32
     if(!cp_already_set) {
         cp_already_set = true;
@@ -45,8 +45,8 @@ bool init_console() {
 
 extern "C" {
 
-int WTF8_init_console(void) {
-    return WTF8::init_console();
+int WTF8_set_console_utf8(void) {
+    return WTF8::set_console_utf8();
 }
 
 }

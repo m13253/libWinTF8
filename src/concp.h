@@ -24,13 +24,13 @@
 namespace WTF8 {
 
 /* return true once when changes are made */
-bool init_console();
+bool set_console_utf8();
 
-class InitConsole {
+class SetConsoleUTF8 {
 public:
 #ifdef _WIN32
-    InitConsole() {
-        init_console();
+    SetConsoleUTF8() {
+        set_console_utf8();
     }
 #endif
 };
@@ -41,7 +41,7 @@ public:
 #ifdef __cplusplus
 extern "C" {
 #endif
-int WTF8_init_console(void);
+int WTF8_set_console_utf8(void);
 #ifdef __cplusplus
 }
 #endif
