@@ -25,12 +25,10 @@
 #include <ostream>
 
 namespace WTF8 {
-
 extern std::istream &cin;
 extern std::ostream &cout;
 extern std::ostream &cerr;
 extern std::ostream &clog;
-
 };
 #endif
 

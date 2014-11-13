@@ -134,15 +134,15 @@ u8string wide_to_utf8(const std::wstring &widestr, bool strict) {
                 ++i;
             }
         } else {
-            if((uint32_t(widestr[i]) & 0xf800) != 0xd800) {
+            if((uint16_t(widestr[i]) & 0xf800) != 0xd800) {
                     utf8str.append({
                         char(widestr[i] >> 12 | 0xe0),
                         char(((widestr[i] >> 6) & 0x3f) | 0x80),
                         char((widestr[i] & 0x3f) | 0x80)
                     });
                     ++i;
-            } else if(i+1 < widestr.size() && uint32_t(widestr[i] & 0xfc00) == 0xd800 && uint32_t(widestr[i+1] & 0xfc00) == 0xdc00) {
-                uint32_t ucs4 = uint32_t((widestr[i] & 0x3ff) << 10 | (widestr[i+1] & 0x3ff)) + 0x10000;
+            } else if(i+1 < widestr.size() && uint16_t(widestr[i] & 0xfc00) == 0xd800 && uint16_t(widestr[i+1] & 0xfc00) == 0xdc00) {
+                uint32_t ucs4 = (uint32_t(widestr[i] & 0x3ff) << 10 | (widestr[i+1] & 0x3ff)) + 0x10000;
                 utf8str.append({
                     char(ucs4 >> 18 | 0xf0),
                     char(((ucs4 >> 12) & 0x3f) | 0x80),
