@@ -107,6 +107,8 @@ private:
             while(last_char != buf)
                 if(uint8_t(last_char[-1] & 0xc0) == 0x80)
                     --last_char;
+                else
+                    break;
             if(last_char == buf)
                 last_char = buf+size;
             std::wstring wbuf = u8string(buf, size_t(last_char-buf)).to_wide();
