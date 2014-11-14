@@ -100,7 +100,7 @@ char **WTF8_getargv(int *argc) {
     return *_NSGetArgv();
 #else
     try {
-        std::vector<WTF8::u8string> argv = WTF8::get_argv();
+        std::vector<WTF8::u8string> argv = WTF8::getargv();
         if(argc)
             *argc = argv.size();
         char **result = new char *[argv.size()+1];
