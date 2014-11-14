@@ -27,6 +27,7 @@
 #include <vector>
 #else
 #include <stddef.h>
+#include <stdint.h>
 #endif
 #include "u8str.h"
 
