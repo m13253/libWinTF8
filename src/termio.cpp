@@ -101,11 +101,11 @@ private:
         if(WTF8_is_console) {
             DWORD wchars_read = 0;
             if(last_surrogate_pair == L'\0') {
-                if(!ReadConsole(WTF8_handle, WTF8_wbuffer.data(), WTF8_buffer_size, &wchars_read, nullptr))
+                if(!ReadConsoleW(WTF8_handle, WTF8_wbuffer.data(), WTF8_buffer_size, &wchars_read, nullptr))
                     return -1;
             } else {
                 WTF8_wbuffer[0] = last_surrogate_pair;
-                if(!ReadConsole(WTF8_handle, WTF8_wbuffer.data()+1, WTF8_buffer_size-1, &wchars_read, nullptr))
+                if(!ReadConsoleW(WTF8_handle, WTF8_wbuffer.data()+1, WTF8_buffer_size-1, &wchars_read, nullptr))
                     return -1;
                 ++wchars_read;
             }
