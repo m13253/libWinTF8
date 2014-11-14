@@ -43,7 +43,7 @@ char *getenv(const char *varname, bool ignore_cache = false) {
     if(result) {
         u8string& cache_item = env_cache[varname_];
         cache_item = u8string(result);
-        /* Remove cv-qualifier for API compatibility, you may not modify the contents */
+        /* Remove cv-qualifier for API compatibility, you should not modify the contents */
         return const_cast<char *>(cache_item.c_str());
     } else
         return nullptr;
