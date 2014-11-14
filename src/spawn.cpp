@@ -163,9 +163,24 @@ WTF8_pid_t spawnvp(const u8string &file, const std::vector<u8string> &argv) {
 #endif
 }
 
+#ifdef _WIN32
+class HandleCloser {
+public:
+    HandleCloser(HANDLE handle) : handle(handle) {
+    }
+    ~HandleCloser() {
+        if(handle)
+            CloseHandle(handle);
+    }
+private:
+    HANDLE handle;
+};
+#endif
+
 bool waitpid(WTF8_pid_t pid, int *exit_code) {
 #ifdef _WIN32
     HANDLE process = OpenProcess(SYNCHRONIZE | (exit_code ? PROCESS_QUERY_INFORMATION : 0), false, pid);
+    HandleCloser dummy(process);
     if(!process || WaitForSingleObject(process, INFINITE) == WAIT_FAILED)
         return false;
     if(exit_code) {
@@ -195,6 +210,7 @@ bool waitpid(WTF8_pid_t pid, int *exit_code) {
 bool kill(WTF8_pid_t pid, bool force) {
 #ifdef _WIN32
     HANDLE process = OpenProcess(PROCESS_TERMINATE, false, pid);
+    HandleCloser dummy(process);
     return process && TerminateProcess(process, -(UINT) 1);
 #else
     return ::kill(pid, force ? SIGKILL : SIGTERM) == 0;
