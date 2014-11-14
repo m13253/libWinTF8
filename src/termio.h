@@ -106,7 +106,9 @@ static inline int putchar(int c) {
 }
 
 static inline int puts(const char *s) {
-    return WTF8::fputs(s, stdout);
+    if(!(cout << s))
+        return EOF;
+    return std::endl(cout) ? 0 : EOF;
 }
 #else
 using std::fgetc;
@@ -131,6 +133,7 @@ int WTF8_ungetc(int c, std::FILE *stream);
 int WTF8_fputc(int c, std::FILE *stream);
 int WTF8_fputs(const char *s, std::FILE *stream);
 int WTF8_feof(std::FILE *stream); 
+int WTF8_puts(const char *s); 
 }
 #else
 int WTF8_fgetc(FILE *stream);
@@ -139,6 +142,7 @@ int WTF8_ungetc(int c, FILE *stream);
 int WTF8_fputc(int c, FILE *stream);
 int WTF8_fputs(const char *s, FILE *stream);
 int WTF8_feof(FILE *stream); 
+int WTF8_puts(const char *s); 
 #endif
 
 #ifdef _WIN32
@@ -160,10 +164,6 @@ static inline int WTF8_getchar(void) {
 
 static inline int WTF8_putchar(int c) {
     return WTF8_fputc(c, stdout);
-}
-
-static inline int WTF8_puts(const char *s) {
-    return WTF8_fputs(s, stdout);
 }
 #endif
 

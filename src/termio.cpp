@@ -302,4 +302,8 @@ int WTF8_feof(std::FILE *stream) {
     return WTF8::feof(stream);
 }
 
+int WTF8_puts(const char *s) {
+    return WTF8::puts(s);
+}
+
 }
