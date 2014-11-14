@@ -34,7 +34,7 @@ extern "C" {
 
 namespace WTF8 {
 
-std::vector<u8string> get_argv() {
+std::vector<u8string> getargv() {
 #if defined(_WIN32)
     int argc;
     wchar_t **wargv = CommandLineToArgvW(GetCommandLineW(), &argc);
@@ -82,7 +82,7 @@ std::vector<u8string> get_argv() {
 
 extern "C" {
 
-char **WTF8_get_argv(int *argc) {
+char **WTF8_getargv(int *argc) {
 #if defined(_WIN32)
     int argc_;
     wchar_t **wargv = CommandLineToArgvW(GetCommandLineW(), &argc_);
@@ -116,7 +116,7 @@ char **WTF8_get_argv(int *argc) {
 #endif
 }
 
-char **WTF8_free_argv(char **argv) {
+char **WTF8_freeargv(char **argv) {
 #if !defined(__APPLE__) || !defined(__MACH__)
     if(argv) {
         for(size_t i = 0; argv[i]; ++i)

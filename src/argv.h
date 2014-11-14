@@ -27,15 +27,15 @@
 
 #ifdef __cplusplus
 namespace WTF8 {
-std::vector<u8string> get_argv();
+std::vector<u8string> getargv();
 }
 #endif
 
 #ifdef __cplusplus
 extern "C" {
 #endif
-char **WTF8_get_argv(int *argc);
-char **WTF8_free_argv(char **argv);
+char **WTF8_getargv(int *argc);
+char **WTF8_freeargv(char **argv);
 #ifdef __cplusplus
 }
 #endif
