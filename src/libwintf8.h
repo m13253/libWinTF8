@@ -30,4 +30,9 @@
 #include "libwintf8/u8str.h"
 #include "libwintf8/utfconv.h"
 
+#if defined(_WIN32) && !defined(WTF8_NO_DEFINE_UNICODE)
+/* Use Unicode version of WinAPI by default just in case you forgot a -W suffix */
+#define UNICODE
+#endif
+
 #endif
