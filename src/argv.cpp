@@ -60,8 +60,7 @@ std::vector<u8string> getargv() {
             u8string argi;
             for(;;) {
                 char c;
-                cmdline.get(c);
-                if(cmdline.good())
+                if(cmdline.get(c))
                     if(c != '\0')
                         argi.push_back(c);
                     else
