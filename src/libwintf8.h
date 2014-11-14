@@ -33,6 +33,8 @@
 #if defined(_WIN32) && !defined(WTF8_NO_DEFINE_UNICODE)
 /* Use Unicode version of WinAPI by default just in case you forgot a -W suffix */
 #define UNICODE
+/* Use Unicode version of C Runtime by default just in case you needed a function not provided by libWinTF8 */
+#define _UNICODE
 #endif
 
 #endif
