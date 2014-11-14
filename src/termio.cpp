@@ -275,3 +275,31 @@ std::ostream &clog = std::clog;
 #endif
 
 }
+
+extern "C" {
+
+int WTF8_fgetc(std::FILE *stream) {
+    return WTF8::fgetc(stream);
+}
+
+char *WTF8_fgets(char *s, int size, std::FILE *stream) {
+    return WTF8::fgets(s, size, stream);
+}
+
+int WTF8_ungetc(int c, std::FILE *stream) {
+    return WTF8::ungetc(c, stream);
+}
+
+int WTF8_fputc(int c, std::FILE *stream) {
+    return WTF8::fputc(c, stream);
+}
+
+int WTF8_fputs(const char *s, std::FILE *stream) {
+    return WTF8::fputs(s, stream);
+}
+
+int WTF8_feof(std::FILE *stream) {
+    return WTF8::feof(stream);
+}
+
+}

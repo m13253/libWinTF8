@@ -21,15 +21,150 @@
 #define WTF8_TERMIO_H_INCLUDED_
 
 #ifdef __cplusplus
+#include <cstdio>
 #include <istream>
 #include <ostream>
+#else
+#include <stdio.h>
+#endif
 
+#ifdef __cplusplus
 namespace WTF8 {
+
 extern std::istream &cin;
 extern std::ostream &cout;
 extern std::ostream &cerr;
 extern std::ostream &clog;
+
+#ifdef _WIN32
+static inline int fgetc(std::FILE *stream) {
+    if(stream == stdin)
+        return cin.get();
+    else
+        return std::fgetc(stream);
+}
+
+static inline char *fgets(char *s, int size, std::FILE *stream) {
+    if(stream == stdin) {
+        if(size == 0)
+            return s;
+        char *cur = s;
+        while(--size != 0) {
+            if(!cin.get(*cur)) {
+                *cur = '\0';
+                return cur == s ? nullptr : s;
+            } else if(*cur == '\n') {
+                cur[1] = '\0';
+                return s;
+            } else
+                ++cur;
+        }
+        *cur = '\0';
+        return s;
+    } else
+        return std::fgets(s, size, stream);
+}
+
+static inline int ungetc(int c, std::FILE *stream) {
+    if(stream == stdin)
+        return cin.putback(c) ? c : EOF;
+    else
+        return std::ungetc(c, stream);
+}
+
+static inline int fputc(int c, std::FILE *stream) {
+    if(stream == stdout)
+        return cout.put(c) ? c : EOF;
+    else if(stream == stderr)
+        return cerr.put(c) ? c : EOF;
+    else
+        return std::fputc(c, stream);
+}
+
+static inline int fputs(const char *s, std::FILE *stream) {
+    if(stream == stdout)
+        return cout << s ? 0 : EOF;
+    else if(stream == stderr)
+        return cout << s ? 0 : EOF;
+    else
+        return std::fputs(s, stream);
+}
+
+static inline int feof(std::FILE *stream) {
+    if(stream == stdin)
+        return cin.eof();
+    else
+        return std::feof(stream);
+}
+
+static inline int getchar() {
+    return WTF8::fgetc(stdin);
+}
+
+static inline int putchar(int c) {
+    return WTF8::fputc(c, stdout);
+}
+
+static inline int puts(const char *s) {
+    return WTF8::fputs(s, stdout);
+}
+#else
+using std::fgetc;
+using std::fgets;
+using std::ungetc;
+using std::fputc;
+using std::fputs;
+using std::feof;
+using std::getchar;
+using std::putchar;
+using std::puts;
+#endif
+
 };
+#endif
+
+#ifdef __cplusplus
+extern "C" {
+int WTF8_fgetc(std::FILE *stream);
+char *WTF8_fgets(char *s, int size, std::FILE *stream);
+int WTF8_ungetc(int c, std::FILE *stream);
+int WTF8_fputc(int c, std::FILE *stream);
+int WTF8_fputs(const char *s, std::FILE *stream);
+int WTF8_feof(std::FILE *stream); 
+}
+#else
+int WTF8_fgetc(FILE *stream);
+char *WTF8_fgets(char *s, int size, FILE *stream);
+int WTF8_ungetc(int c, FILE *stream);
+int WTF8_fputc(int c, FILE *stream);
+int WTF8_fputs(const char *s, FILE *stream);
+int WTF8_feof(FILE *stream); 
+#endif
+
+#ifdef _WIN32
+static inline int WTF8_getchar(void) {
+    return getchar();
+}
+
+static inline int WTF8_putchar(int c) {
+    return putchar(c);
+}
+
+static inline int WTF8_puts(const char *s) {
+    return puts(s);
+}
+#else
+static inline int WTF8_getchar(void) {
+    return WTF8_fgetc(stdin);
+}
+
+static inline int WTF8_putchar(int c) {
+    return WTF8_fputc(c, stdout);
+}
+
+static inline int WTF8_puts(const char *s) {
+    return WTF8_fputs(s, stdout);
+}
 #endif
 
 #endif
