@@ -232,9 +232,11 @@ private:
 class ConsoleInput : public std::istream {
 public:
     using std::istream::istream;
-    ConsoleInput() :
+    ConsoleInput(std::ostream *tied_stream = nullptr) :
         WTF8_buffer(new ConsoleInputBuffer(GetStdHandle(STD_INPUT_HANDLE))) {
         rdbuf(WTF8_buffer.get());
+        if(tied_stream)
+            tie(tied_stream);
     }
 private:
     std::unique_ptr<ConsoleInputBuffer> WTF8_buffer;
@@ -243,26 +245,20 @@ private:
 class ConsoleOutput : public std::ostream {
 public:
     using std::ostream::ostream;
-    ConsoleOutput(int fd = 1) :
+    ConsoleOutput(int fd = 1, std::ostream *tied_stream = nullptr) :
         WTF8_buffer(new ConsoleOutputBuffer(GetStdHandle(fd != 2 ? STD_OUTPUT_HANDLE : STD_ERROR_HANDLE))) {
         rdbuf(WTF8_buffer.get());
+        if(tied_stream)
+            tie(tied_stream);
     }
 private:
     std::unique_ptr<ConsoleOutputBuffer> WTF8_buffer;
 };
 
-static ConsoleInput cin_inst;
 static ConsoleOutput cout_inst(1);
-static ConsoleOutput cerr_inst(2);
-static ConsoleOutput clog_inst(2);
-
-static struct ConsoleInitializer {
-    ConsoleInitializer() {
-        cin_inst.tie(&cout_inst);
-        cerr_inst.tie(&cout_inst);
-        clog_inst.tie(&cout_inst);
-    }
-} console_initializer;
+static ConsoleInput cin_inst(&cout_inst);
+static ConsoleOutput cerr_inst(2, &cout_inst);
+static ConsoleOutput clog_inst(2, &cout_inst);
 
 std::istream &cin = cin_inst;
 std::ostream &cout = cout_inst;
