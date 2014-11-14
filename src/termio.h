@@ -153,10 +153,6 @@ static inline int WTF8_getchar(void) {
 static inline int WTF8_putchar(int c) {
     return putchar(c);
 }
-
-static inline int WTF8_puts(const char *s) {
-    return puts(s);
-}
 #else
 static inline int WTF8_getchar(void) {
     return WTF8_fgetc(stdin);
