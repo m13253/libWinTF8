@@ -166,8 +166,10 @@ WTF8_pid_t spawnvp(const u8string &file, const std::vector<u8string> &argv) {
 #ifdef _WIN32
 class HandleCloser {
 public:
+    HandleCloser() = delete;
     HandleCloser(HANDLE handle) : handle(handle) {
     }
+    HandleCloser(HandleCloser &) = delete;
     ~HandleCloser() {
         if(handle)
             CloseHandle(handle);
