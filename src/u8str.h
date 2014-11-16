@@ -59,12 +59,9 @@ namespace std {
 
 template<>
 struct hash<WTF8::u8string> {
-public:
     size_t operator()(const WTF8::u8string &s) const {
-        return hasher(s);
+        return hash<string>()(s);
     }
-private:
-    static std::hash<std::string> hasher;
 };
 
 }

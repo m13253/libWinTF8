@@ -101,17 +101,17 @@ u8string wide_to_utf8(const std::wstring &widestr, bool strict) {
             ++i;
         } else if(uint32_t(widestr[i]) < 0x800) {
             utf8str.append({
-                char(widestr[i] >> 6 | 0xc0),
-                char((widestr[i] & 0x3f) | 0x80)
+                char(uint32_t(widestr[i]) >> 6 | 0xc0),
+                char((uint32_t(widestr[i]) & 0x3f) | 0x80)
             });
             ++i;
         } else if(sizeof (wchar_t) >= 4) {
             if(uint32_t(widestr[i]) < 0x10000) {
                 if((uint32_t(widestr[i]) & 0xf800) != 0xd800) {
                     utf8str.append({
-                        char(widestr[i] >> 12 | 0xe0),
-                        char(((widestr[i] >> 6) & 0x3f) | 0x80),
-                        char((widestr[i] & 0x3f) | 0x80)
+                        char(uint32_t(widestr[i]) >> 12 | 0xe0),
+                        char(((uint32_t(widestr[i]) >> 6) & 0x3f) | 0x80),
+                        char((uint32_t(widestr[i]) & 0x3f) | 0x80)
                     });
                     ++i;
                 } else if(strict) {
@@ -122,10 +122,10 @@ u8string wide_to_utf8(const std::wstring &widestr, bool strict) {
                 }
             } else if(uint32_t(widestr[i]) < 0x110000) {
                 utf8str.append({
-                    char(widestr[i] >> 18 | 0xf0),
-                    char(((widestr[i] >> 12) & 0x3f) | 0x80),
-                    char(((widestr[i] >> 6) & 0x3f) | 0x80),
-                    char((widestr[i] & 0x3f) | 0x80)
+                    char(uint32_t(widestr[i]) >> 18 | 0xf0),
+                    char(((uint32_t(widestr[i]) >> 12) & 0x3f) | 0x80),
+                    char(((uint32_t(widestr[i]) >> 6) & 0x3f) | 0x80),
+                    char((uint32_t(widestr[i]) & 0x3f) | 0x80)
                 });
                 ++i;
             } else if(strict) {
@@ -137,9 +137,9 @@ u8string wide_to_utf8(const std::wstring &widestr, bool strict) {
         } else {
             if((uint16_t(widestr[i]) & 0xf800) != 0xd800) {
                     utf8str.append({
-                        char(widestr[i] >> 12 | 0xe0),
-                        char(((widestr[i] >> 6) & 0x3f) | 0x80),
-                        char((widestr[i] & 0x3f) | 0x80)
+                        char(uint16_t(widestr[i]) >> 12 | 0xe0),
+                        char(((uint16_t(widestr[i]) >> 6) & 0x3f) | 0x80),
+                        char((uint16_t(widestr[i]) & 0x3f) | 0x80)
                     });
                     ++i;
             } else if(i+1 < widestr.size() && uint16_t(widestr[i] & 0xfc00) == 0xd800 && uint16_t(widestr[i+1] & 0xfc00) == 0xdc00) {
