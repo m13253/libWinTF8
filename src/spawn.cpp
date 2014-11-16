@@ -44,7 +44,7 @@ static WTF8_pid_t spawnvp_win32(const wchar_t *file, const std::vector<u8string>
         u8string argo;
         size_t backslashes = 0;
         bool has_spaces = false;
-        for(char i : argi)
+        for(const char i : argi)
             if(i == '\0')
                 break; /* have no idea how to handle it */
             else if(i == '/')
