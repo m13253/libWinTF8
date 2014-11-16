@@ -131,7 +131,7 @@ static WTF8_pid_t spawnvp_posix(const char *file, char *const *argv) {
         while(write(errpipe[1], &exec_err, sizeof exec_err) == -1 && errno == EINTR) {
         }
         close(errpipe[1]);
-        _exit(255);
+        _exit(127);
         abort();
     } else {
         close(errpipe[1]);
