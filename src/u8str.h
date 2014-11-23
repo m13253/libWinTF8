@@ -30,7 +30,7 @@ namespace WTF8 {
 
 class u8string : public std::string {
 public:
-    using std::string::string;
+    using std::string::basic_string;
     explicit u8string() : std::string() {
     }
     explicit u8string(const std::string &s) :
