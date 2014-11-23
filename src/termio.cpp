@@ -237,6 +237,9 @@ public:
         if(tied_stream)
             tie(tied_stream);
     }
+protected:
+    ConsoleInput() {
+    }
 private:
     std::unique_ptr<ConsoleInputBuffer> WTF8_buffer;
 };
@@ -248,6 +251,9 @@ public:
         rdbuf(WTF8_buffer.get());
         if(tied_stream)
             tie(tied_stream);
+    }
+protected:
+    ConsoleOutput() {
     }
 private:
     std::unique_ptr<ConsoleOutputBuffer> WTF8_buffer;
