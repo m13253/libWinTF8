@@ -68,7 +68,7 @@ public:
         return to_wide();
     }
 
-    /* Inheriting all the constructors, since MSVC does nog support C++ 11 inherited constructors */
+    /* Inheriting all the constructors, since MSVC does not support C++ 11 inherited constructors */
     u8string(size_t count, char ch) :
         std::string(count, ch) {
     }
