@@ -54,7 +54,7 @@ std::vector<u8string> getargv() {
     return result;
 #else
     std::ifstream cmdline("/proc/self/cmdline");
-    if(cmdline.good()) {
+    if(cmdline.is_open()) {
         std::vector<u8string> result;
         for(;;) {
             u8string argi;
