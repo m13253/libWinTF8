@@ -23,6 +23,7 @@
 #ifdef __cplusplus
 #include <cstddef>
 #include <functional>
+#include <initializer_list>
 #include <string>
 #include <utility>
 
@@ -38,6 +39,22 @@ public:
     explicit u8string(std::string &&s) :
         std::string(std::move(s)) {
     }
+    u8string(const u8string &s) :
+        std::string(s) {
+    }
+    u8string(u8string &&s) :
+        std::string(std::move(s)) {
+    }
+    u8string &operator=(const u8string &s) {
+        *this = s;
+        return *this;
+    }
+    u8string &operator=(u8string &&s) {
+        *this = std::move(s);
+        return *this;
+    }
+
+    /* Conversion methods */
     u8string(const std::wstring &s, bool strict = false);
     u8string(const wchar_t *s, bool strict = false);
     static u8string from_wide(const std::wstring &s, bool strict = false) {
@@ -49,6 +66,27 @@ public:
     std::wstring to_wide(bool strict = false) const;
     operator std::wstring() const {
         return to_wide();
+    }
+
+    /* Inheriting all the constructors, since MSVC does nog support C++ 11 inherited constructors */
+    u8string(size_t count, char ch) :
+        std::string(count, ch) {
+    }
+    u8string(const u8string &other, size_t pos, size_t count = npos) :
+        std::string(other, pos, count) {
+    }
+    u8string(const char *s, size_t count) :
+        std::string(s, count) {
+    }
+    u8string(const char *s) :
+        std::string(s) {
+    }
+    template<class InputIterator>
+    u8string(InputIterator first, InputIterator last) :
+        std::string(first, last) {
+    }
+    u8string(std::initializer_list<char> init) :
+        std::string(init) {
     }
 };
 
