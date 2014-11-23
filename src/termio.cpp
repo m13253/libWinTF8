@@ -231,7 +231,7 @@ private:
 
 class ConsoleInput : public std::istream {
 public:
-    ConsoleInput(std::ostream *tied_stream = nullptr) :
+    ConsoleInput(std::ostream *tied_stream) :
         WTF8_buffer(new ConsoleInputBuffer(GetStdHandle(STD_INPUT_HANDLE))) {
         rdbuf(WTF8_buffer.get());
         if(tied_stream)
@@ -243,7 +243,7 @@ private:
 
 class ConsoleOutput : public std::ostream {
 public:
-    ConsoleOutput(int fd = 1, std::ostream *tied_stream = nullptr) :
+    ConsoleOutput(int fd, std::ostream *tied_stream = nullptr) :
         WTF8_buffer(new ConsoleOutputBuffer(GetStdHandle(fd != 2 ? STD_OUTPUT_HANDLE : STD_ERROR_HANDLE))) {
         rdbuf(WTF8_buffer.get());
         if(tied_stream)
