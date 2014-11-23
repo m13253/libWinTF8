@@ -24,6 +24,10 @@
 #include <string>
 #include <cstring>
 
+#ifdef _MSC_VER
+#define ssize_t ptrdiff_t
+#endif
+
 namespace WTF8 {
 
 template <typename T> 
