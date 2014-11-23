@@ -118,7 +118,6 @@ public:
         std::basic_fstream<CharT, Traits>(std::move(other)) {
     }
     basic_fstream(const basic_fstream &) = delete;
-
 #ifdef _WIN32
     explicit basic_fstream(const char *filename, std::ios_base::openmode mode = std::ios_base::in | std::ios_base::out) :
         std::basic_fstream<CharT, Traits>(u8string(filename).to_wide(true), mode) {
@@ -129,7 +128,6 @@ public:
     explicit basic_fstream(const u8string &filename, std::ios_base::openmode mode = std::ios_base::in | std::ios_base::out) :
         std::basic_fstream<CharT, Traits>(filename.to_wide(true), mode) {
     }
-
     void open(const char *filename, std::ios_base::openmode mode = std::ios_base::in | std::ios_base::out) {
         std::basic_fstream<CharT, Traits>::open(u8string(filename).to_wide(true), mode);
     }
@@ -144,7 +142,6 @@ public:
     explicit basic_fstream(const u8string &filename, std::ios_base::openmode mode = std::ios_base::in | std::ios_base::out) :
         std::basic_fstream<CharT, Traits>(static_cast<std::string>(filename), mode) {
     }
-
     void open(const u8string &filename, std::ios_base::openmode mode = std::ios_base::in | std::ios_base::out) {
         std::basic_fstream<CharT, Traits>::open(static_cast<std::string>(filename), mode);
     }
