@@ -49,7 +49,7 @@ int main() {
 
 ## Documentation
 
-This project is on early development and the documentation is not finished yet. If you enjoy libWinTF8, consider helping me to document it.
+This project is in early development and the documentation is not finished yet. If you enjoy libWinTF8, consider helping me to document it.
 
 Alternatively you can browse and read the source code to understand how it works.
 
