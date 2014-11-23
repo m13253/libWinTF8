@@ -23,6 +23,7 @@
 #ifdef __cplusplus
 #include <ios>
 #include <fstream>
+#include <utility>
 #include "u8str.h"
 
 namespace WTF8 {
@@ -30,7 +31,13 @@ namespace WTF8 {
 template<typename CharT, typename Traits = std::char_traits<CharT> >
 class basic_ifstream : public std::basic_ifstream<CharT, Traits> {
 public:
-    using std::basic_ifstream<CharT, Traits>::basic_ifstream;
+    basic_ifstream() :
+        std::basic_ifstream<CharT, Traits>() {
+    }
+    basic_ifstream(basic_ifstream &&other) :
+        std::basic_ifstream<CharT, Traits>(std::move(other)) {
+    }
+    basic_ifstream(const basic_ifstream &) = delete;
 #ifdef _WIN32
     explicit basic_ifstream(const char *filename, std::ios_base::openmode mode = std::ios_base::in) :
         std::basic_ifstream<CharT, Traits>(u8string(filename).to_wide(true), mode) {
@@ -51,6 +58,7 @@ public:
         std::basic_ifstream<CharT, Traits>::open(filename.to_wide(true), mode);
     }
 #else
+    using std::basic_ifstream<CharT, Traits>::basic_ifstream;
     explicit basic_ifstream(const u8string &filename, std::ios_base::openmode mode = std::ios_base::in) :
         std::basic_ifstream<CharT, Traits>(static_cast<std::string>(filename), mode) {
     }
@@ -63,7 +71,13 @@ public:
 template<typename CharT, typename Traits = std::char_traits<CharT> >
 class basic_ofstream : public std::basic_ofstream<CharT, Traits> {
 public:
-    using std::basic_ofstream<CharT, Traits>::basic_ofstream;
+    basic_ofstream() :
+        std::basic_ofstream<CharT, Traits>() {
+    }
+    basic_ofstream(basic_ofstream &&other) :
+        std::basic_ofstream<CharT, Traits>(std::move(other)) {
+    }
+    basic_ofstream(const basic_ofstream &) = delete;
 #ifdef _WIN32
     explicit basic_ofstream(const char *filename, std::ios_base::openmode mode = std::ios_base::out) :
         std::basic_ofstream<CharT, Traits>(u8string(filename).to_wide(true), mode) {
@@ -84,6 +98,7 @@ public:
         std::basic_ofstream<CharT, Traits>::open(filename.to_wide(true), mode);
     }
 #else
+    using std::basic_ofstream<CharT, Traits>::basic_ofstream;
     explicit basic_ofstream(const u8string &filename, std::ios_base::openmode mode = std::ios_base::out) :
         std::basic_ofstream<CharT, Traits>(static_cast<std::string>(filename), mode) {
     }
@@ -96,7 +111,14 @@ public:
 template<typename CharT, typename Traits = std::char_traits<CharT> >
 class basic_fstream : public std::basic_fstream<CharT, Traits> {
 public:
-    using std::basic_fstream<CharT, Traits>::basic_fstream;
+    basic_fstream() :
+        std::basic_fstream<CharT, Traits>() {
+    }
+    basic_fstream(basic_fstream &&other) :
+        std::basic_fstream<CharT, Traits>(std::move(other)) {
+    }
+    basic_fstream(const basic_fstream &) = delete;
+
 #ifdef _WIN32
     explicit basic_fstream(const char *filename, std::ios_base::openmode mode = std::ios_base::in | std::ios_base::out) :
         std::basic_fstream<CharT, Traits>(u8string(filename).to_wide(true), mode) {
@@ -107,6 +129,7 @@ public:
     explicit basic_fstream(const u8string &filename, std::ios_base::openmode mode = std::ios_base::in | std::ios_base::out) :
         std::basic_fstream<CharT, Traits>(filename.to_wide(true), mode) {
     }
+
     void open(const char *filename, std::ios_base::openmode mode = std::ios_base::in | std::ios_base::out) {
         std::basic_fstream<CharT, Traits>::open(u8string(filename).to_wide(true), mode);
     }
@@ -117,9 +140,11 @@ public:
         std::basic_fstream<CharT, Traits>::open(filename.to_wide(true), mode);
     }
 #else
+    using std::basic_fstream<CharT, Traits>::basic_fstream;
     explicit basic_fstream(const u8string &filename, std::ios_base::openmode mode = std::ios_base::in | std::ios_base::out) :
         std::basic_fstream<CharT, Traits>(static_cast<std::string>(filename), mode) {
     }
+
     void open(const u8string &filename, std::ios_base::openmode mode = std::ios_base::in | std::ios_base::out) {
         std::basic_fstream<CharT, Traits>::open(static_cast<std::string>(filename), mode);
     }
@@ -129,7 +154,19 @@ public:
 template<typename CharT, typename Traits = std::char_traits<CharT> >
 class basic_filebuf : public std::basic_filebuf<CharT, Traits> {
 public:
-    using std::basic_filebuf<CharT, Traits>::basic_filebuf;
+    basic_filebuf() :
+        std::basic_filebuf<CharT, Traits>() {
+    }
+    basic_filebuf(const basic_filebuf &) = delete;
+    basic_filebuf(basic_filebuf &&other) :
+        std::basic_filebuf<CharT, Traits>(std::move(other)) {
+    }
+    basic_filebuf &operator=(basic_filebuf &&other) {
+        *static_cast<std::basic_filebuf<CharT, Traits>>(this) = std::move(other);
+        return *this;
+    }
+    basic_filebuf &operator=(const basic_filebuf &) = delete;
+
 #ifdef _WIN32
     basic_filebuf *open(const char *filename, std::ios_base::openmode mode) {
         return std::basic_filebuf<CharT, Traits>::open(u8string(filename).to_wide(true), mode) ? this : nullptr;
