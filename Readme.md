@@ -1,7 +1,7 @@
 libWinTF8
 =========
 
-The library handling things related to UTF-8 and Unicode when you want to port your program to Windows.
+LibWinTF8 is the library handling things related to UTF-8 and Unicode when you want to port your program to Windows.
 
 ## Compiling
 
@@ -21,7 +21,7 @@ Every C function is prefixed with `WTF8_`.
 
 ## Demo
 
-A simple `cat` program, supporting UTF-8 filename and Unicode output.
+The following is a simple `cat` program, supporting UTF-8 filename and Unicode output.
 
 ```c++
 #include <iostream>
