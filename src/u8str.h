@@ -46,11 +46,11 @@ public:
         std::string(std::move(s)) {
     }
     u8string &operator=(const u8string &s) {
-        *this = s;
+        *static_cast<std::string *>(this) = s;
         return *this;
     }
     u8string &operator=(u8string &&s) {
-        *this = std::move(s);
+        *static_cast<std::string *>(this) = std::move(s);
         return *this;
     }
 
