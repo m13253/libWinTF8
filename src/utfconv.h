@@ -33,9 +33,9 @@
 namespace WTF8 {
 
 class unicode_conversion_error : public std::runtime_error {
-    using std::runtime_error::runtime_error;
 public:
-    unicode_conversion_error() : runtime_error("Can not convert string to Unicode") {}
+    unicode_conversion_error(const char *what) : std::runtime_error(what) {}
+    unicode_conversion_error() : std::runtime_error("Can not convert string to Unicode") {}
 };
 
 /* Microsoft VC++ Runtime behaves differently on different versions,

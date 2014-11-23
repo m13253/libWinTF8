@@ -41,9 +41,9 @@ typedef int WTF8_pid_t;
 namespace WTF8 {
 
 class process_spawn_error : public std::runtime_error {
-    using std::runtime_error::runtime_error;
 public:
-    process_spawn_error() : runtime_error("Unable to create a new process") {}
+    process_spawn_error(const char *what) : std::runtime_error(what) {}
+    process_spawn_error() : std::runtime_error("Unable to create a new process") {}
 };
 
 WTF8_pid_t spawnvp(const u8string &file, const std::vector<u8string> &argv);
