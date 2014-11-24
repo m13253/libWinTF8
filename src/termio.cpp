@@ -42,10 +42,10 @@ namespace WTF8 {
 
 class ConsoleInputBuffer : public std::streambuf {
 public:
-    ConsoleInputBuffer(HANDLE handle) :
-        WTF8_handle(handle) {
+    ConsoleInputBuffer(int fd) :
+        WTF8_handle(GetStdHandle(fd)) {
         DWORD dummy;
-        WTF8_is_console = GetConsoleMode(handle, &dummy);
+        WTF8_is_console = GetConsoleMode(WTF8_handle, &dummy);
         if(WTF8_is_console)
             WTF8_wbuffer.resize(1024);
         else
@@ -137,10 +137,10 @@ private:
 
 class ConsoleOutputBuffer : public std::streambuf {
 public:
-    ConsoleOutputBuffer(HANDLE handle) :
-        WTF8_handle(handle) {
+    ConsoleOutputBuffer(int fd) :
+        WTF8_handle(GetStdHandle(fd)) {
         DWORD dummy;
-        WTF8_is_console = GetConsoleMode(handle, &dummy);
+        WTF8_is_console = GetConsoleMode(WTF8_handle, &dummy);
         setp(WTF8_buffer, WTF8_buffer+WTF8_buffer_size);
     }
 protected:
@@ -231,38 +231,31 @@ private:
 
 class ConsoleInput : public std::istream {
 public:
-    ConsoleInput(std::ostream *tied_stream) :
-        WTF8_buffer(new ConsoleInputBuffer(GetStdHandle(STD_INPUT_HANDLE))) {
-        rdbuf(WTF8_buffer.get());
+    ConsoleInput(std::streambuf *rdbuf, std::ostream *tied_stream) :
+    	std::istream(rdbuf) {
         if(tied_stream)
             tie(tied_stream);
     }
-protected:
-    ConsoleInput() {
-    }
-private:
-    std::unique_ptr<ConsoleInputBuffer> WTF8_buffer;
 };
 
 class ConsoleOutput : public std::ostream {
 public:
-    ConsoleOutput(int fd, std::ostream *tied_stream = nullptr) :
-        WTF8_buffer(new ConsoleOutputBuffer(GetStdHandle(fd != 2 ? STD_OUTPUT_HANDLE : STD_ERROR_HANDLE))) {
-        rdbuf(WTF8_buffer.get());
+    ConsoleOutput(std::streambuf *rdbuf, std::ostream *tied_stream = nullptr) :
+    	std::ostream(rdbuf) {
         if(tied_stream)
             tie(tied_stream);
     }
-protected:
-    ConsoleOutput() {
-    }
-private:
-    std::unique_ptr<ConsoleOutputBuffer> WTF8_buffer;
 };
 
-static ConsoleOutput cout_inst(1);
-static ConsoleInput cin_inst(&cout_inst);
-static ConsoleOutput cerr_inst(2, &cout_inst);
-static ConsoleOutput clog_inst(2, &cout_inst);
+static ConsoleInputBuffer cin_buf(STD_INPUT_HANDLE);
+static ConsoleOutputBuffer cout_buf(STD_OUTPUT_HANDLE);
+static ConsoleOutputBuffer cerr_buf(STD_ERROR_HANDLE);
+static ConsoleOutputBuffer clog_buf(STD_ERROR_HANDLE);
+
+static ConsoleOutput cout_inst(&cout_buf);
+static ConsoleInput cin_inst(&cin_buf, &cout_inst);
+static ConsoleOutput cerr_inst(&cerr_buf, &cout_inst);
+static ConsoleOutput clog_inst(&clog_buf, &cout_inst);
 
 std::istream &cin = cin_inst;
 std::ostream &cout = cout_inst;
