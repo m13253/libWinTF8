@@ -91,7 +91,7 @@ protected:
             return c;
         } else {
             has_last_putback = true;
-            last_putback = c;
+            last_putback = char(c);
             setg(&last_putback, &last_putback, &last_putback+1);
             return c;
         }
@@ -185,7 +185,7 @@ protected:
         if(c != EOF) {
             if(pptr() == epptr())
                 return EOF;
-            *pptr() = c;
+            *pptr() = char(c);
             pbump(1);
         }
         return c;

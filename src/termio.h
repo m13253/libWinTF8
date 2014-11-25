@@ -67,16 +67,16 @@ static inline char *fgets(char *s, int size, std::FILE *stream) {
 
 static inline int ungetc(int c, std::FILE *stream) {
     if(stream == stdin)
-        return cin.putback(c) ? c : EOF;
+        return cin.putback(char(c)) ? c : EOF;
     else
         return std::ungetc(c, stream);
 }
 
 static inline int fputc(int c, std::FILE *stream) {
     if(stream == stdout)
-        return cout.put(c) ? c : EOF;
+        return cout.put(char(c)) ? c : EOF;
     else if(stream == stderr)
-        return cerr.put(c) ? c : EOF;
+        return cerr.put(char(c)) ? c : EOF;
     else
         return std::fputc(c, stream);
 }
