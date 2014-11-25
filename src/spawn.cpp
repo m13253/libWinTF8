@@ -213,7 +213,7 @@ bool kill(WTF8_pid_t pid, bool force) {
 #ifdef _WIN32
     HANDLE process = OpenProcess(PROCESS_TERMINATE, false, pid);
     HandleCloser dummy(process);
-    return process && TerminateProcess(process, -(UINT) 1);
+    return process && TerminateProcess(process, ~UINT(0) /* -1 */);
 #else
     return ::kill(pid, force ? SIGKILL : SIGTERM) == 0;
 #endif

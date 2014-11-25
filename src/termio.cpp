@@ -45,7 +45,7 @@ public:
     ConsoleInputBuffer(int fd) :
         WTF8_handle(GetStdHandle(fd)) {
         DWORD dummy;
-        WTF8_is_console = GetConsoleMode(WTF8_handle, &dummy);
+        WTF8_is_console = bool(GetConsoleMode(WTF8_handle, &dummy));
         if(WTF8_is_console)
             WTF8_wbuffer.resize(1024);
         else
@@ -101,11 +101,11 @@ private:
         if(WTF8_is_console) {
             DWORD wchars_read = 0;
             if(last_surrogate_pair == L'\0') {
-                if(!ReadConsoleW(WTF8_handle, WTF8_wbuffer.data(), WTF8_buffer_size, &wchars_read, nullptr))
+                if(!ReadConsoleW(WTF8_handle, WTF8_wbuffer.data(), DWORD(WTF8_buffer_size), &wchars_read, nullptr))
                     return -1;
             } else {
                 WTF8_wbuffer[0] = last_surrogate_pair;
-                if(!ReadConsoleW(WTF8_handle, WTF8_wbuffer.data()+1, WTF8_buffer_size-1, &wchars_read, nullptr))
+                if(!ReadConsoleW(WTF8_handle, WTF8_wbuffer.data()+1, DWORD(WTF8_buffer_size-1), &wchars_read, nullptr))
                     return -1;
                 ++wchars_read;
             }
@@ -118,7 +118,7 @@ private:
         } else {
             DWORD bytes_read = 0;
             WTF8_buffer.resize(WTF8_buffer_size);
-            if(!ReadFile(WTF8_handle, WTF8_buffer.data(), WTF8_buffer.size(), &bytes_read, nullptr))
+            if(!ReadFile(WTF8_handle, WTF8_buffer.data(), DWORD(WTF8_buffer.size()), &bytes_read, nullptr))
                 return -1;
             WTF8_buffer.resize(bytes_read);
         }
@@ -140,7 +140,7 @@ public:
     ConsoleOutputBuffer(int fd) :
         WTF8_handle(GetStdHandle(fd)) {
         DWORD dummy;
-        WTF8_is_console = GetConsoleMode(WTF8_handle, &dummy);
+        WTF8_is_console = bool(GetConsoleMode(WTF8_handle, &dummy));
         setp(WTF8_buffer, WTF8_buffer+WTF8_buffer_size);
     }
 protected:
@@ -170,7 +170,7 @@ protected:
             else if(written < size) {
                 memmove(pbase(), pbase()+written, size-written);
                 setp(pbase(), epptr());
-                pbump(size-written);
+                pbump(int(size-written));
             } else
                 setp(pbase(), epptr());
             return 0;
@@ -207,7 +207,7 @@ private:
                     size = size_t(last_char-buf);
                 }
             DWORD wchars_written = 0;
-            if(!WriteConsoleW(WTF8_handle, wbuf.data(), wbuf.size(), &wchars_written, nullptr))
+            if(!WriteConsoleW(WTF8_handle, wbuf.data(), DWORD(wbuf.size()), &wchars_written, nullptr))
                 return -1;
             else if(wchars_written == wbuf.size())
                 return size;
@@ -216,7 +216,7 @@ private:
                 return min(u8string::from_wide(wbuf.substr(0, wchars_written)).size(), size);
         } else {
             DWORD bytes_written = 0;
-            if(!WriteFile(WTF8_handle, buf, size, &bytes_written, nullptr))
+            if(!WriteFile(WTF8_handle, buf, DWORD(size), &bytes_written, nullptr))
                 return -1;
             else
                 return bytes_written;
