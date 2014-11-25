@@ -50,7 +50,7 @@ u8string wide_to_utf8(const std::wstring& widestr, bool strict = false);
 extern "C" {
 #endif
 
-static const size_t WTF8_UNICODE_CONVERT_ERROR = -(size_t) 1;
+static const size_t WTF8_UNICODE_CONVERT_ERROR = (size_t) -(size_t) 1;
 
 size_t WTF8_utf8_to_wide(wchar_t *widestr, const char *utf8str, int strict, size_t bufsize);
 size_t WTF8_wide_to_utf8(char *utf8str, const wchar_t *widestr, int strict, size_t bufsize);
