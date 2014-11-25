@@ -45,7 +45,7 @@ public:
     ConsoleInputBuffer(int fd) :
         WTF8_handle(GetStdHandle(fd)) {
         DWORD dummy;
-        WTF8_is_console = bool(GetConsoleMode(WTF8_handle, &dummy));
+        WTF8_is_console = !!GetConsoleMode(WTF8_handle, &dummy);
         if(WTF8_is_console)
             WTF8_wbuffer.resize(1024);
         else
@@ -140,7 +140,7 @@ public:
     ConsoleOutputBuffer(int fd) :
         WTF8_handle(GetStdHandle(fd)) {
         DWORD dummy;
-        WTF8_is_console = bool(GetConsoleMode(WTF8_handle, &dummy));
+        WTF8_is_console = !!GetConsoleMode(WTF8_handle, &dummy);
         setp(WTF8_buffer, WTF8_buffer+WTF8_buffer_size);
     }
 protected:
