@@ -5,11 +5,13 @@ LibWinTF8 is the library handling things related to UTF-8 and Unicode when you w
 
 ## Compiling
 
-You need a C++ 11 compatible compiler (GCC / Clang / MSVC preferred) and CMake to build this library.
+You need a C++ 11 compliant compiler (GCC / Clang) or MSVC (at least version 12, that is Visual Studio 2013) and CMake to build this library.
 
 On POSIX compatible systems with GCC toolchain, run `./configure && make` to build it.
 
-On Windows with MSVC toolchain, generate a project from `CMakeLists.txt` and build it.
+On Windows with MSVC toolchain, generate a Visual Studio solution from `CMakeLists.txt` and build it.
+
+Considering the C++ ABI compatibility issue, it is recommended to use the same compiler to build libWinTF8 as well as other parts of your software.
 
 ## Usage
 
