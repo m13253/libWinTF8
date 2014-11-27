@@ -41,7 +41,7 @@ char *getenv(const char *varname, bool ignore_cache = false) {
         }
     wchar_t *result = _wgetenv(varname_.to_wide().c_str());
     if(result) {
-        u8string& cache_item = env_cache[varname_];
+        u8string &cache_item = env_cache[varname_];
         cache_item = u8string(result);
         /* Remove cv-qualifier for API compatibility, you should not modify the contents */
         return const_cast<char *>(cache_item.c_str());

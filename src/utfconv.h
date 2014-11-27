@@ -40,8 +40,8 @@ public:
 
 /* Microsoft VC++ Runtime behaves differently on different versions,
    we will just reimplement them ourselves. */
-std::wstring utf8_to_wide(const u8string& utf8str, bool strict = false);
-u8string wide_to_utf8(const std::wstring& widestr, bool strict = false);
+std::wstring utf8_to_wide(const u8string &utf8str, bool strict = false);
+u8string wide_to_utf8(const std::wstring &widestr, bool strict = false);
 
 };
 #endif
