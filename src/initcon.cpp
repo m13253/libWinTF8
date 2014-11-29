@@ -38,12 +38,10 @@ static bool test_windows_version_vista() {
 }
 #endif
 
-bool set_console_utf8() {
+bool set_console_font() {
 #ifdef _WIN32
     if(!console_already_set) {
         console_already_set = true;
-        SetConsoleOutputCP(65001);
-        SetConsoleCP(65001);
         if(test_windows_version_vista()) {
             HMODULE kernel32_dll = LoadLibraryW(L"kernel32.dll");
             auto dynamic_GetCurrentConsoleFontEx = reinterpret_cast<BOOL (WINAPI *)(HANDLE hConsoleOutput, BOOL bMaximumWindow, CONSOLE_FONT_INFOEX *lpConsoleCurrentFontEx)>(GetProcAddress(kernel32_dll, "GetCurrentConsoleFontEx"));
@@ -56,11 +54,10 @@ bool set_console_utf8() {
                     console_font_info.FontFamily = FF_DONTCARE;
                     console_font_info.FontWeight = FW_NORMAL;
                     wmemcpy(console_font_info.FaceName, L"Lucida Console", 15);
-                    dynamic_SetCurrentConsoleFontEx(stdout_handle, false, &console_font_info);
+                    return !!dynamic_SetCurrentConsoleFontEx(stdout_handle, false, &console_font_info);
                 }
             }
         }
-        return true;
     }
 #endif
     return false;
@@ -70,8 +67,8 @@ bool set_console_utf8() {
 
 extern "C" {
 
-int WTF8_set_console_utf8(void) {
-    return WTF8::set_console_utf8();
+int WTF8_set_console_font(void) {
+    return WTF8::set_console_font();
 }
 
 }

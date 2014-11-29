@@ -23,14 +23,14 @@
 #ifdef __cplusplus
 namespace WTF8 {
 
-/* return true once when changes are made */
-bool set_console_utf8();
+/* Set console font to Lucida Console, which is the only console font supporting Unicode characters. */
+bool set_console_font();
 
-class SetConsoleUTF8 {
+class SetConsolefont {
 public:
 #ifdef _WIN32
-    SetConsoleUTF8() {
-        set_console_utf8();
+    SetConsolefont() {
+        set_console_font();
     }
 #endif
 };
@@ -41,7 +41,7 @@ public:
 #ifdef __cplusplus
 extern "C" {
 #endif
-int WTF8_set_console_utf8(void);
+int WTF8_set_console_font(void);
 #ifdef __cplusplus
 }
 #endif
