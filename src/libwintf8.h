@@ -24,6 +24,7 @@
 #include "libwintf8/concp.h"
 #include "libwintf8/env.h"
 #include "libwintf8/fileio.h"
+#include "libwintf8/printf.h"
 #include "libwintf8/spawn.h"
 #include "libwintf8/streamio.h"
 #include "libwintf8/termio.h"
