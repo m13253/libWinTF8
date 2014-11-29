@@ -30,8 +30,11 @@ The following is a simple `cat` program, supporting UTF-8 filename and Unicode o
 #include <vector>
 #include <libwintf8.h>
 
-int main() {
+namespace {
     WTF8::SetConsoleFont dummy;
+}
+
+int main() {
     std::vector<WTF8::u8string> argv = WTF8::getargv();
     if(argv.size() < 2) {
         WTF8::cerr << "Usage: " << argv[0] << " filename" << std::endl;
