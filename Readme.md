@@ -30,16 +30,17 @@ The following is a simple `cat` program, supporting UTF-8 filename and Unicode o
 #include <vector>
 #include <libwintf8.h>
 
-namespace {
-    WTF8::SetConsoleFont dummy;
-}
+/* Set the Windows console font to Lucida Console, which is the only console font supporting Unicode characters. */
+WTF8::SetConsoleFont set_console_font;
 
 int main() {
+    /* WTF8::u8string inherits std::string. In addition to useful conversion methods, introducing a new type makes sure that different encodings do not mix up. */
     std::vector<WTF8::u8string> argv = WTF8::getargv();
     if(argv.size() < 2) {
         WTF8::cerr << "Usage: " << argv[0] << " filename" << std::endl;
         return 1;
     }
+    /* WTF8::ifstream / ofstream / fstream accepts WTF8::u8string as file name. */
     WTF8::u8string filename = argv[1];
     WTF8::ifstream fileobj(filename);
     if(!fileobj.is_open()) {
@@ -47,6 +48,7 @@ int main() {
         return 2;
     }
     char c;
+    /* WTF8::cin / cout / cerr / clog also support UTF-8 text. */
     while(fileobj.get(c))
         WTF8::cout << c;
     return 0;
