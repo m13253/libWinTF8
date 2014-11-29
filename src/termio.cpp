@@ -58,13 +58,13 @@ protected:
             size = 1024;
         /* only use the size parameter */
         if(WTF8_is_console) {
-            WTF8_wbuffer.resize(size);
+            WTF8_wbuffer.resize(size_t(size));
             WTF8_wbuffer.shrink_to_fit();
         } else {
             WTF8_buffer.resize(0);
             WTF8_buffer.reserve(size);
         }
-        WTF8_buffer_size = size;
+        WTF8_buffer_size = size_t(size);
         return this;
     }
     int underflow() {
@@ -91,7 +91,7 @@ private:
                     return -1;
                 ++wchars_read;
             }
-            if(std::streamsize(wchars_read) == WTF8_buffer_size && uint16_t(WTF8_wbuffer[wchars_read-1] & 0xfc00) == 0xd800)
+            if(size_t(wchars_read) == WTF8_buffer_size && uint16_t(WTF8_wbuffer[wchars_read-1] & 0xfc00) == 0xd800)
                 last_surrogate_pair = WTF8_wbuffer[--wchars_read];
             else
                 last_surrogate_pair = L'\0';
@@ -131,7 +131,7 @@ private:
     wchar_t last_surrogate_pair = L'\0';
     bool has_last_putback = false;
     char last_putback;
-    std::streamsize WTF8_buffer_size = 1024;
+    size_t WTF8_buffer_size = 1024;
 };
 
 class ConsoleOutputBuffer : public std::streambuf {
@@ -225,7 +225,7 @@ private:
     bool WTF8_is_console;
     std::vector<char> WTF8_init_buffer = std::vector<char>(1024);
     char *WTF8_buffer = WTF8_init_buffer.data();
-    std::streamsize WTF8_buffer_size = 1024;
+    size_t WTF8_buffer_size = 1024;
 };
 
 class ConsoleInput : public std::istream {
