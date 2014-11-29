@@ -245,6 +245,9 @@ public:
         if(tied_stream)
             tie(tied_stream);
     }
+    virtual ~ConsoleOutput() {
+        *this << std::flush;
+    }
 };
 
 static ConsoleInputBuffer cin_buf(STD_INPUT_HANDLE);
