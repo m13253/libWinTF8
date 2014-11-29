@@ -46,8 +46,8 @@ bool set_console_utf8() {
         SetConsoleCP(65001);
         if(test_windows_version_vista()) {
             HMODULE kernel32_dll = LoadLibraryW(L"kernel32.dll");
-            auto dynamic_GetCurrentConsoleFontEx = reinterpret_cast<BOOL WINAPI (*)(HANDLE hConsoleOutput, BOOL bMaximumWindow, CONSOLE_FONT_INFOEX *lpConsoleCurrentFontEx)>(GetProcAddress(kernel32_dll, "GetCurrentConsoleFontEx"));
-            auto dynamic_SetCurrentConsoleFontEx = reinterpret_cast<BOOL WINAPI (*)(HANDLE hConsoleOutput, BOOL bMaximumWindow, CONSOLE_FONT_INFOEX *lpConsoleCurrentFontEx)>(GetProcAddress(kernel32_dll, "SetCurrentConsoleFontEx"));
+            auto dynamic_GetCurrentConsoleFontEx = reinterpret_cast<BOOL (WINAPI *)(HANDLE hConsoleOutput, BOOL bMaximumWindow, CONSOLE_FONT_INFOEX *lpConsoleCurrentFontEx)>(GetProcAddress(kernel32_dll, "GetCurrentConsoleFontEx"));
+            auto dynamic_SetCurrentConsoleFontEx = reinterpret_cast<BOOL (WINAPI *)(HANDLE hConsoleOutput, BOOL bMaximumWindow, CONSOLE_FONT_INFOEX *lpConsoleCurrentFontEx)>(GetProcAddress(kernel32_dll, "SetCurrentConsoleFontEx"));
             if(dynamic_GetCurrentConsoleFontEx && dynamic_SetCurrentConsoleFontEx) {
                 HANDLE stdout_handle = GetStdHandle(STD_OUTPUT_HANDLE);
                 for(const bool bMaximumWindow : {false, true}) {
