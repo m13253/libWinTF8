@@ -26,10 +26,10 @@ namespace WTF8 {
 /* Set the Windows console font to Lucida Console, which is the only console font supporting Unicode characters. */
 bool set_console_font();
 
-class SetConsolefont {
+class SetConsoleFont {
 public:
 #ifdef _WIN32
-    SetConsolefont() {
+    SetConsoleFont() {
         set_console_font();
     }
 #endif
