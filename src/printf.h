@@ -17,44 +17,39 @@
   WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 */
 #pragma once
-#ifndef WTF8_FILEIO_H_INCLUDED_
-#define WTF8_FILEIO_H_INCLUDED_
+#ifndef WTF8_PRINTF_H_INCLUDED_
+#define WTF8_PRINTF_H_INCLUDED_
 
 #ifdef __cplusplus
-#include <cstdio>
+#include <cstdarg>
+#include <cstddef>
+#include <string>
 #else
-#include <stdio.h>
+#include <stdarg.h>
+#include <stddef.h>
 #endif
 
 #ifdef __cplusplus
 namespace WTF8 {
-std::FILE *fopen(const char *path, const char *mode);
-std::FILE *freopen(const char *path, const char *mode, std::FILE *fp);
-std::FILE *fclose(std::FILE *fp);
-int remove(const char *path);
-int rename(const char *oldname, const char *newname);
+int printf(const char *format, ...);
+int vprintf(const char *format, va_list ap);
+int fprintf(std::FILE *stream, const char *format, ...);
+int vfprintf(std::FILE *stream, const char *format, va_list ap);
 }
 #endif
 
 #ifdef __cplusplus
 extern "C" {
-std::FILE *WTF8_fopen(const char *path, const char *mode);
-std::FILE *WTF8_freopen(const char *path, const char *mode, std::FILE* fp);
-std::FILE *WTF8_fclose(std::FILE *fp);
+int WTF8_printf(const char *format, ...);
+int WTF8_vprintf(const char *format, va_list ap);
+int WTF8_fprintf(std::FILE *stream, const char *format, ...);
+int WTF8_vfprintf(std::FILE *stream, const char *format, va_list ap);
 }
 #else
-FILE *WTF8_fopen(const char *path, const char *mode);
-FILE *WTF8_freopen(const char *path, const char *mode, FILE *fp);
-FILE *WTF8_fclose(FILE *fp);
-#endif
-
-#ifdef __cplusplus
-extern "C" {
-#endif
-int WTF8_remove(const char *path);
-int WTF8_rename(const char *oldname, const char *newname);
-#ifdef __cplusplus
-}
+int WTF8_printf(const char *format, ...);
+int WTF8_vprintf(const char *format, va_list ap);
+int WTF8_fprintf(std::FILE *stream, const char *format, ...);
+int WTF8_vfprintf(std::FILE *stream, const char *format, va_list ap);
 #endif
 
 #endif
