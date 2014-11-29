@@ -58,11 +58,12 @@ protected:
             size = 1024;
         /* only use the size parameter */
         if(WTF8_is_console) {
+            WTF8_buffer.clear();
             WTF8_wbuffer.resize(size_t(size));
             WTF8_wbuffer.shrink_to_fit();
         } else {
             WTF8_buffer.resize(0);
-            WTF8_buffer.reserve(size);
+            WTF8_buffer.reserve(size_t(size));
         }
         WTF8_buffer_size = size_t(size);
         return this;
@@ -146,6 +147,7 @@ protected:
     std::streambuf *setbuf(char *buffer, std::streamsize size) {
         sync();
         if(size == 0) {
+            WTF8_init_buffer.clear();
             WTF8_init_buffer.resize(1024);
             WTF8_init_buffer.shrink_to_fit();
             buffer = WTF8_init_buffer.data();
@@ -155,7 +157,7 @@ protected:
             WTF8_init_buffer.shrink_to_fit();
         }
         WTF8_buffer = buffer;
-        WTF8_buffer_size = size;
+        WTF8_buffer_size = size_t(size);
         setp(WTF8_buffer, WTF8_buffer+WTF8_buffer_size);
         return this;
     }
