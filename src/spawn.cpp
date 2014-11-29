@@ -34,9 +34,19 @@
 #include <unistd.h>
 #endif
 
+
 namespace WTF8 {
 
 #ifdef _WIN32
+static bool test_windows_version_vista() {
+    OSVERSIONINFOEXW os_version_info = { sizeof os_version_info, 6 };
+    ULONGLONG ver_set_condition_mask = 0;
+    ver_set_condition_mask = VerSetConditionMask(ver_set_condition_mask, VER_MAJORVERSION, VER_GREATER_EQUAL);
+    ver_set_condition_mask = VerSetConditionMask(ver_set_condition_mask, VER_MINORVERSION, VER_GREATER_EQUAL);
+    ver_set_condition_mask = VerSetConditionMask(ver_set_condition_mask, VER_SERVICEPACKMAJOR, VER_GREATER_EQUAL);
+    return !!VerifyVersionInfoW(&os_version_info, VER_MAJORVERSION | VER_MINORVERSION | VER_SERVICEPACKMAJOR, ver_set_condition_mask);
+}
+
 static WTF8_pid_t spawnvp_win32(const wchar_t *file, const std::vector<u8string> &argv) {
     /* http://msdn.microsoft.com/en-us/library/17w5ykft.aspx */
     std::wstring cmdline;
@@ -181,7 +191,7 @@ private:
 
 bool waitpid(WTF8_pid_t pid, int *exit_code) {
 #ifdef _WIN32
-    HANDLE process = OpenProcess(SYNCHRONIZE | (exit_code ? PROCESS_QUERY_INFORMATION : 0), false, pid);
+    HANDLE process = OpenProcess(SYNCHRONIZE | (exit_code ? test_windows_version_vista() ? PROCESS_QUERY_LIMITED_INFORMATION : PROCESS_QUERY_INFORMATION : 0), false, pid);
     HandleCloser dummy(process);
     if(!process || WaitForSingleObject(process, INFINITE) == WAIT_FAILED)
         return false;

@@ -16,37 +16,34 @@
   IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED
   WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 */
-#include "utils.h"
-#include "concp.h"
+#pragma once
+#ifndef WTF8_INITCON_H_INCLUDED_
+#define WTF8_INITCON_H_INCLUDED_
 
-#ifdef _WIN32
-#include <windows.h>
-#endif
-
+#ifdef __cplusplus
 namespace WTF8 {
 
-#ifdef _WIN32
-static bool cp_already_set = false;
-#endif
+/* return true once when changes are made */
+bool set_console_utf8();
 
-bool set_console_utf8() {
+class SetConsoleUTF8 {
+public:
 #ifdef _WIN32
-    if(!cp_already_set) {
-        cp_already_set = true;
-        SetConsoleOutputCP(65001);
-        SetConsoleCP(65001);
-        return true;
+    SetConsoleUTF8() {
+        set_console_utf8();
     }
 #endif
-    return false;
-}
+};
 
 }
+#endif
 
+#ifdef __cplusplus
 extern "C" {
-
-int WTF8_set_console_utf8(void) {
-    return WTF8::set_console_utf8();
+#endif
+int WTF8_set_console_utf8(void);
+#ifdef __cplusplus
 }
+#endif
 
-}
+#endif

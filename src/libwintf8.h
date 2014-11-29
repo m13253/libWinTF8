@@ -21,9 +21,9 @@
 #define WTF8_H_INCLUDED_
 
 #include "libwintf8/argv.h"
-#include "libwintf8/concp.h"
 #include "libwintf8/env.h"
 #include "libwintf8/fileio.h"
+#include "libwintf8/initcon.h"
 #include "libwintf8/printf.h"
 #include "libwintf8/spawn.h"
 #include "libwintf8/streamio.h"
