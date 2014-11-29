@@ -40,7 +40,7 @@ int main() {
         WTF8::cerr << "Usage: " << argv[0] << " filename" << std::endl;
         return 1;
     }
-    /* WTF8::ifstream / ofstream / fstream accepts WTF8::u8string as file name. */
+    /* WTF8::ifstream / ofstream / fstream accept WTF8::u8string as file name. */
     WTF8::u8string filename = argv[1];
     WTF8::ifstream fileobj(filename);
     if(!fileobj.is_open()) {
@@ -48,7 +48,7 @@ int main() {
         return 2;
     }
     char c;
-    /* WTF8::cin / cout / cerr / clog also support UTF-8 text. */
+    /* WTF8::cin / cout / cerr / clog use UTF-8 text. */
     while(fileobj.get(c))
         WTF8::cout << c;
     return 0;
