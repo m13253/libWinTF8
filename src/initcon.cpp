@@ -50,15 +50,13 @@ bool set_console_utf8() {
             auto dynamic_SetCurrentConsoleFontEx = reinterpret_cast<BOOL (WINAPI *)(HANDLE hConsoleOutput, BOOL bMaximumWindow, CONSOLE_FONT_INFOEX *lpConsoleCurrentFontEx)>(GetProcAddress(kernel32_dll, "SetCurrentConsoleFontEx"));
             if(dynamic_GetCurrentConsoleFontEx && dynamic_SetCurrentConsoleFontEx) {
                 HANDLE stdout_handle = GetStdHandle(STD_OUTPUT_HANDLE);
-                for(const bool bMaximumWindow : {false, true}) {
-                    CONSOLE_FONT_INFOEX console_font_info;
-                    if(dynamic_GetCurrentConsoleFontEx(stdout_handle, bMaximumWindow, &console_font_info)) {
-                        console_font_info.nFont = 10;
-                        console_font_info.FontFamily = FF_DONTCARE;
-                        console_font_info.FontWeight = FW_NORMAL;
-                        wmemcpy(console_font_info.FaceName, L"Lucida Console", 15);
-                        dynamic_SetCurrentConsoleFontEx(stdout_handle, bMaximumWindow, &console_font_info);
-                    }
+                CONSOLE_FONT_INFOEX console_font_info = { sizeof console_font_info };
+                if(dynamic_GetCurrentConsoleFontEx(stdout_handle, false, &console_font_info)) {
+                    console_font_info.nFont = 10;
+                    console_font_info.FontFamily = FF_DONTCARE;
+                    console_font_info.FontWeight = FW_NORMAL;
+                    wmemcpy(console_font_info.FaceName, L"Lucida Console", 15);
+                    dynamic_SetCurrentConsoleFontEx(stdout_handle, false, &console_font_info);
                 }
             }
         }
