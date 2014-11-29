@@ -23,7 +23,7 @@
 #ifdef __cplusplus
 namespace WTF8 {
 
-/* Set console font to Lucida Console, which is the only console font supporting Unicode characters. */
+/* Set the Windows console font to Lucida Console, which is the only console font supporting Unicode characters. */
 bool set_console_font();
 
 class SetConsolefont {
