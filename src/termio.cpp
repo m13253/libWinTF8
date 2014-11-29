@@ -68,12 +68,6 @@ protected:
         return this;
     }
     int underflow() {
-        if(has_last_putback) {
-            if(gptr() != egptr())
-                return last_putback;
-            else
-                setg(WTF8_buffer.data(), WTF8_buffer.data(), WTF8_buffer.data()+WTF8_buffer.size());
-        }
         if(gptr() == egptr()) {
             if(read() == -1)
                 return EOF;
@@ -82,22 +76,10 @@ protected:
         }
         return std::char_traits<char>::to_int_type(*gptr());
     }
-    int pbackfail(int c = EOF) {
-        if(has_last_putback)
-            return EOF;
-        else if(gptr() != eback()) {
-            gptr()[-1] = char(c);
-            gbump(-1);
-            return c;
-        } else {
-            has_last_putback = true;
-            last_putback = char(c);
-            setg(&last_putback, &last_putback, &last_putback+1);
-            return c;
-        }
-    }
 private:
     ssize_t read() {
+        bool has_last_putback = eback() != gptr();
+        char last_putback = has_last_putback ? gptr()[-1] : '\xff';
         if(WTF8_is_console) {
             DWORD wchars_read = 0;
             if(last_surrogate_pair == L'\0') {
@@ -113,17 +95,34 @@ private:
                 last_surrogate_pair = WTF8_wbuffer[--wchars_read];
             else
                 last_surrogate_pair = L'\0';
-            u8string WTF8_sbuffer = u8string::from_wide(std::wstring(WTF8_wbuffer.data(), wchars_read));
+            u8string WTF8_sbuffer;
+            if(has_last_putback) {
+                WTF8_sbuffer = u8string(1, last_putback);
+                WTF8_sbuffer += u8string::from_wide(std::wstring(WTF8_wbuffer.data(), wchars_read));
+            } else
+                WTF8_sbuffer = u8string::from_wide(std::wstring(WTF8_wbuffer.data(), wchars_read));
             WTF8_buffer.assign(WTF8_sbuffer.cbegin(), WTF8_sbuffer.cend());
         } else {
             DWORD bytes_read = 0;
+            WTF8_buffer.clear();
             WTF8_buffer.resize(WTF8_buffer_size);
-            if(!ReadFile(WTF8_handle, WTF8_buffer.data(), DWORD(WTF8_buffer.size()), &bytes_read, nullptr))
-                return -1;
-            WTF8_buffer.resize(bytes_read);
+            if(has_last_putback) {
+                WTF8_buffer[0] = last_putback;
+                if(!ReadFile(WTF8_handle, WTF8_buffer.data()+1, DWORD(WTF8_buffer.size()-1), &bytes_read, nullptr))
+                    return -1;
+                WTF8_buffer.resize(bytes_read+1);
+            } else {
+                if(!ReadFile(WTF8_handle, WTF8_buffer.data(), DWORD(WTF8_buffer.size()), &bytes_read, nullptr))
+                    return -1;
+                WTF8_buffer.resize(bytes_read);
+            }
         }
         setg(WTF8_buffer.data(), WTF8_buffer.data(), WTF8_buffer.data()+WTF8_buffer.size());
-        return WTF8_buffer.size();
+        if(has_last_putback) {
+            gbump(1);
+            return WTF8_buffer.size()-1;
+        } else
+            return WTF8_buffer.size();
     }
     HANDLE WTF8_handle;
     bool WTF8_is_console;
