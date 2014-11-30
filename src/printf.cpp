@@ -18,6 +18,7 @@
 */
 #include <cstdarg>
 #include <cstdio>
+#include <cstring>
 #include <memory>
 #include <vector>
 #include "utils.h"
@@ -35,7 +36,8 @@ static int vasprintf(std::vector<char> &result, const char *format, va_list ap, 
     va_copy(ap_copy, ap);
     size = vsnprintf_s(result.data(), result.size(), _TRUNCATE, format, ap_copy);
     va_end(ap_copy);
-    while(size < 0) {
+    /* notice that MSVCRT returns -1 on truncation unlike POSIX */
+    while(size < 0 || size_t(size) >= result.size()) {
         result.clear();
         result.resize(size_hint += size_hint/2);
         va_copy(ap_copy, ap);

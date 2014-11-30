@@ -8,5 +8,5 @@ mkdir build
 echo 'cd build'
 cd build
 echo 'cmake ..'
-cmake .. "$@"
+cmake -DCMAKE_BUILD_TYPE=Release .. "$@"
 echo "Configured successfully, use 'cd build && make' to build."
