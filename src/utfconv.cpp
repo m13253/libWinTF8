@@ -24,7 +24,7 @@
 
 namespace WTF8 {
 
-static bool utf8_check_continuation(const u8string &utf8str, size_t start, size_t check_length) {
+static bool utf8_check_continuation(const std::string &utf8str, size_t start, size_t check_length) {
     if(utf8str.size() > start + check_length) {
         while(check_length--)
             if((uint8_t(utf8str[++start]) & 0xc0) != 0x80)
@@ -34,10 +34,10 @@ static bool utf8_check_continuation(const u8string &utf8str, size_t start, size_
         return false;
 }
 
-std::wstring utf8_to_wide(const u8string &utf8str, bool strict) {
+std::wstring utf8_to_wide(const std::string &utf8str, bool strict) {
     std::wstring widestr;
     size_t i = 0;
-    widestr.reserve(utf8str.size()/2);
+    widestr.reserve(utf8str.size());
     while(i < utf8str.size()) {
         if(uint8_t(utf8str[i]) < 0x80) {
             widestr.push_back(utf8str[i]);
@@ -91,10 +91,10 @@ std::wstring utf8_to_wide(const u8string &utf8str, bool strict) {
     return widestr;
 }
 
-u8string wide_to_utf8(const std::wstring &widestr, bool strict) {
-    u8string utf8str;
+std::string wide_to_utf8(const std::wstring &widestr, bool strict) {
+    std::string utf8str;
     size_t i = 0;
-    utf8str.reserve(widestr.size()*2);
+    utf8str.reserve(widestr.size()*4);
     while(i < widestr.size()) {
         if(uint32_t(widestr[i]) < 0x80) {
             utf8str.push_back(char(widestr[i]));
@@ -163,13 +163,60 @@ u8string wide_to_utf8(const std::wstring &widestr, bool strict) {
     return utf8str;
 }
 
+size_t utf8_count_codepoints(const std::string &utf8str, bool strict) {
+    size_t i = 0;
+    size_t result = 0;
+    while(i < utf8str.size()) {
+        if(uint8_t(utf8str[i]) < 0x80) {
+            ++result;
+            ++i;
+            continue;
+        } else if(uint8_t(utf8str[i]) < 0xc0) {
+        } else if(uint8_t(utf8str[i]) < 0xe0) {
+            if(utf8_check_continuation(utf8str, i, 1)) {
+                uint32_t ucs4 = uint32_t(utf8str[i] & 0x1f) << 6 | uint32_t(utf8str[i+1] & 0x3f);
+                if(ucs4 >= 0x80) {
+                    ++result;
+                    i += 2;
+                    continue;
+                }
+            }
+        } else if(uint8_t(utf8str[i]) < 0xf0) {
+            if(utf8_check_continuation(utf8str, i, 2)) {
+                uint32_t ucs4 = uint32_t(utf8str[i] & 0xf) << 12 | uint32_t(utf8str[i+1] & 0x3f) << 6 | (utf8str[i+2] & 0x3f);
+                if(ucs4 >= 0x800 && (ucs4 & 0xf800) != 0xd800) {
+                    ++result;
+                    i += 3;
+                    continue;
+                }
+            }
+        } else if(uint8_t(utf8str[i]) < 0xf8) {
+            if(utf8_check_continuation(utf8str, i, 3)) {
+                uint32_t ucs4 = uint32_t(utf8str[i] & 0x7) << 18 | uint32_t(utf8str[i+1] & 0x3f) << 12 | uint32_t(utf8str[i+2] & 0x3f) << 6 | uint32_t(utf8str[i+3] & 0x3f);
+                if(ucs4 >= 0x10000 && ucs4 < 0x110000) {
+                    ++result;
+                    i += 4;
+                    continue;
+                }
+            }
+        }
+        if(strict)
+            throw unicode_conversion_error();
+        else {
+            ++result;
+            ++i;
+        }
+    }
+    return result;
+}
+
 }
 
 extern "C" {
 
 size_t WTF8_utf8_to_wide(wchar_t *widestr, const char *utf8str, int strict, size_t bufsize) {
     try {
-        std::wstring widestrpp = WTF8::utf8_to_wide(WTF8::u8string(utf8str), strict != 0);
+        std::wstring widestrpp = WTF8::utf8_to_wide(std::string(utf8str), strict != 0);
         if(widestr && bufsize != 0) {
             std::memcpy(widestr, widestrpp.data(), WTF8::min(widestrpp.size(), bufsize-1)*sizeof (wchar_t));
             widestr[WTF8::min(widestrpp.size(), bufsize)] = L'\0';
@@ -182,12 +229,20 @@ size_t WTF8_utf8_to_wide(wchar_t *widestr, const char *utf8str, int strict, size
 
 size_t WTF8_wide_to_utf8(char *utf8str, const wchar_t *widestr, int strict, size_t bufsize) {
     try {
-        WTF8::u8string utf8strpp = WTF8::wide_to_utf8(std::wstring(widestr), strict != 0);
+        std::string utf8strpp = WTF8::wide_to_utf8(std::wstring(widestr), strict != 0);
         if(utf8str && bufsize != 0) {
             std::memcpy(utf8str, utf8strpp.data(), WTF8::min(utf8strpp.size(), bufsize-1)*sizeof (char));
             utf8str[WTF8::min(utf8strpp.size(), bufsize)] = '\0';
         }
         return utf8strpp.size();
+    } catch(WTF8::unicode_conversion_error) {
+        return WTF8_UNICODE_CONVERT_ERROR;
+    }
+}
+
+size_t WTF8_utf8_count_codepoints(const char *utf8str, int strict) {
+    try {
+        return WTF8::utf8_count_codepoints(std::string(utf8str), strict != 0);
     } catch(WTF8::unicode_conversion_error) {
         return WTF8_UNICODE_CONVERT_ERROR;
     }

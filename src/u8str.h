@@ -55,8 +55,8 @@ public:
     }
 
     /* Conversion methods */
-    u8string(const std::wstring &s, bool strict = false);
-    u8string(const wchar_t *s, bool strict = false);
+    explicit u8string(const std::wstring &s, bool strict = false);
+    explicit u8string(const wchar_t *s, bool strict = false);
     static u8string from_wide(const std::wstring &s, bool strict = false) {
         return u8string(s, strict);
     }
@@ -64,9 +64,10 @@ public:
         return u8string(s, strict);
     }
     std::wstring to_wide(bool strict = false) const;
-    operator std::wstring() const {
+    explicit operator std::wstring() const {
         return to_wide();
     }
+    size_t count_codepoints(bool strict = false) const;
 
     /* Inheriting all the constructors, since MSVC does not support C++ 11 inherited constructors */
     u8string(size_t count, char ch) :
