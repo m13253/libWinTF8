@@ -18,11 +18,14 @@
 */
 #include <cerrno>
 #include <cstdio>
-#include <share.h>
 #include "utils.h"
 #include "u8str.h"
 #include "utfconv.h"
 #include "fileio.h"
+
+#ifdef _WIN32
+#include <share.h>
+#endif
 
 namespace WTF8 {
 

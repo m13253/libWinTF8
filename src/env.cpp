@@ -66,7 +66,7 @@ int setenv(const char *varname, const char *value) {
         return -1;
     }
 #else
-    return std::setenv(varname, value, true);
+    return ::setenv(varname, value, true);
 #endif
 }
 
@@ -79,7 +79,7 @@ int unsetenv(const char *varname) {
         return -1;
     }
 #else
-    return std::unsetenv(varname);
+    return ::unsetenv(varname);
 #endif
 }
 
