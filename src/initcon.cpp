@@ -44,17 +44,19 @@ bool set_console_font() {
         console_already_set = true;
         if(test_windows_version_vista()) {
             HMODULE kernel32_dll = LoadLibraryW(L"kernel32.dll");
-            auto dynamic_GetCurrentConsoleFontEx = reinterpret_cast<decltype(GetCurrentConsoleFontEx) *>(GetProcAddress(kernel32_dll, "GetCurrentConsoleFontEx"));
-            auto dynamic_SetCurrentConsoleFontEx = reinterpret_cast<decltype(SetCurrentConsoleFontEx) *>(GetProcAddress(kernel32_dll, "SetCurrentConsoleFontEx"));
-            if(dynamic_GetCurrentConsoleFontEx && dynamic_SetCurrentConsoleFontEx) {
-                HANDLE stdout_handle = GetStdHandle(STD_OUTPUT_HANDLE);
-                CONSOLE_FONT_INFOEX console_font_info = { sizeof console_font_info };
-                if(dynamic_GetCurrentConsoleFontEx(stdout_handle, false, &console_font_info)) {
-                    console_font_info.nFont = 10;
-                    console_font_info.FontFamily = FF_DONTCARE;
-                    console_font_info.FontWeight = FW_NORMAL;
-                    wmemcpy(console_font_info.FaceName, L"Lucida Console", 15);
-                    return !!dynamic_SetCurrentConsoleFontEx(stdout_handle, false, &console_font_info);
+            if(kernel32_dll) {
+                auto dynamic_GetCurrentConsoleFontEx = reinterpret_cast<decltype(GetCurrentConsoleFontEx) *>(GetProcAddress(kernel32_dll, "GetCurrentConsoleFontEx"));
+                auto dynamic_SetCurrentConsoleFontEx = reinterpret_cast<decltype(SetCurrentConsoleFontEx) *>(GetProcAddress(kernel32_dll, "SetCurrentConsoleFontEx"));
+                if(dynamic_GetCurrentConsoleFontEx && dynamic_SetCurrentConsoleFontEx) {
+                    HANDLE stdout_handle = GetStdHandle(STD_OUTPUT_HANDLE);
+                    CONSOLE_FONT_INFOEX console_font_info = { sizeof console_font_info };
+                    if(dynamic_GetCurrentConsoleFontEx(stdout_handle, false, &console_font_info)) {
+                        console_font_info.nFont = 10;
+                        console_font_info.FontFamily = FF_DONTCARE;
+                        console_font_info.FontWeight = FW_NORMAL;
+                        wmemcpy(console_font_info.FaceName, L"Lucida Console", 15);
+                        return !!dynamic_SetCurrentConsoleFontEx(stdout_handle, false, &console_font_info);
+                    }
                 }
             }
         }

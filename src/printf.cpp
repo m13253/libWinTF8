@@ -124,13 +124,13 @@ int WTF8_fprintf(std::FILE *stream, const char *format, ...) {
     va_list ap;
     int size;
     va_start(ap, format);
-    size = WTF8::fprintf(stream, format, ap);
+    size = WTF8::vfprintf(stream, format, ap);
     va_end(ap);
     return size;
 }
 
 int WTF8_vfprintf(std::FILE *stream, const char *format, va_list ap) {
-    return WTF8::fprintf(stream, format, ap);
+    return WTF8::vfprintf(stream, format, ap);
 }
 
 }
