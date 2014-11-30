@@ -27,23 +27,23 @@
 namespace WTF8 {
 
 #ifdef _WIN32
-int vasprintf(std::vector<char> &result, const char *format, va_list ap, size_t size_hint = 256) {
+static int vasprintf(std::vector<char> &result, const char *format, va_list ap, size_t size_hint = 256) {
     result.clear();
     result.resize(size_hint);
     int size;
     va_list ap_copy;
     va_copy(ap_copy, ap);
-    size = vsnprintf(result.data(), result.size(), format, ap_copy);
+    size = vsnprintf_s(result.data(), result.size(), _TRUNCATE, format, ap_copy);
     va_end(ap_copy);
-    if(size < 0)
-        result.resize(0);
-    else if(size_t(size) >= size_hint) {
+    while(size < 0) {
         result.clear();
-        result.resize(size+1);
+        result.resize(size_hint += size_hint/2);
         va_copy(ap_copy, ap);
-        size = vsnprintf(result.data(), result.size(), format, ap_copy);
+        size = vsnprintf_s(result.data(), result.size(), _TRUNCATE, format, ap_copy);
         va_end(ap_copy);
     }
+    result.resize(size+1);
+    result.shrink_to_fit();
     return size;
 }
 #endif
