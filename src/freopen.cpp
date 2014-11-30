@@ -28,7 +28,11 @@ namespace WTF8 {
 std::FILE *freopen(const char *path, const char *mode, std::FILE *fp) {
 #ifdef _WIN32
     try {
-        return _wfreopen(u8string(path).to_wide(true).c_str(), u8string(mode).to_wide(true).c_str(), fp);
+        FILE *fp_new = nullptr;
+        if(_wfreopen_s(&fp_new, u8string(path).to_wide(true).c_str(), u8string(mode).to_wide(true).c_str(), fp) == 0)
+            return fp_new;
+        else
+            return nullptr;
     } catch(unicode_conversion_error) {
         std::fclose(fp);
         errno = EINVAL;
