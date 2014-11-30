@@ -20,19 +20,24 @@
 #ifndef WTF8_ENV_H_INCLUDED_
 #define WTF8_ENV_H_INCLUDED_
 
+#include "u8str.h"
+
 #ifdef __cplusplus
 namespace WTF8 {
-char *getenv(const char *varname, bool ignore_cache = false);
-int putenv(const char *envstring);
+const char *getenv(const char *varname);
+const char *freeenv(const char *envstring);
+int setenv(const char *varname, const char *value);
+int unsetenv(const char *varname);
 }
 #endif
 
 #ifdef __cplusplus
 extern "C" {
 #endif
-char *WTF8_getenv(const char *varname);
-char *WTF8_getenv_nocache(const char *varname);
-int WTF8_putenv(const char *envstring);
+const char *WTF8_getenv(const char *varname);
+const char *WTF8_freeenv(const char *envstring);
+int WTF8_setenv(const char *varname, const char *value);
+int WTF8_unsetenv(const char *varname);
 #ifdef __cplusplus
 }
 #endif

@@ -233,7 +233,7 @@ private:
 class ConsoleInput : public std::istream {
 public:
     ConsoleInput(std::streambuf *rdbuf, std::ostream *tied_stream) :
-    	std::istream(rdbuf) {
+        std::istream(rdbuf) {
         if(tied_stream)
             tie(tied_stream);
     }
@@ -242,7 +242,7 @@ public:
 class ConsoleOutput : public std::ostream {
 public:
     ConsoleOutput(std::streambuf *rdbuf, std::ostream *tied_stream = nullptr) :
-    	std::ostream(rdbuf) {
+        std::ostream(rdbuf) {
         if(tied_stream)
             tie(tied_stream);
     }

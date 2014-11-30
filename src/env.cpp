@@ -18,54 +18,68 @@
 */
 #include <cerrno>
 #include <cstdlib>
-#include <cstring>
-#include <stdexcept>
-#include <unordered_map>
+#include <string>
+#include <vector>
 #include "utils.h"
 #include "u8str.h"
 
-namespace WTF8 {
-
 #ifdef _WIN32
-static std::unordered_map<u8string, u8string> env_cache;
+#include <windows.h>
 #endif
 
-char *getenv(const char *varname, bool ignore_cache = false) {
-    using namespace std;
+namespace WTF8 {
+
+const char *getenv(const char *varname) {
 #ifdef _WIN32
-    u8string varname_(varname);
-    if(!ignore_cache)
-        try {
-            return const_cast<char *>(env_cache.at(varname_).c_str());
-        } catch(std::out_of_range) {
-        }
-    wchar_t *result = _wgetenv(varname_.to_wide().c_str());
-    if(result) {
-        u8string &cache_item = env_cache[varname_];
-        cache_item = u8string(result);
-        /* Remove cv-qualifier for API compatibility, you should not modify the contents */
-        return const_cast<char *>(cache_item.c_str());
-    } else
+    std::wstring varname_ = u8string(varname).to_wide();
+    std::vector<wchar_t> buffer(1024);
+    DWORD size = GetEnvironmentVariableW(varname_.c_str(), buffer.data(), DWORD(buffer.size()));
+    if(size == 0)
         return nullptr;
+    else if(size_t(size) >= buffer.size()) {
+        buffer.clear();
+        buffer.resize(size); /* size includes the terminating NUL */
+        size = GetEnvironmentVariableW(varname_.c_str(), buffer.data(), DWORD(buffer.size()));
+    }
+    if(size == 0)
+        return nullptr;
+    else
+        return new_c_str(u8string::from_wide(std::wstring(buffer.data(), size)));
 #else
-    (void) ignore_cache;
-    return getenv(varname);
+    return std::getenv(varname);
 #endif
 }
 
-int putenv(const char *envstring) {
-    using namespace std;
+const char *freeenv(const char *envstring) {
 #ifdef _WIN32
-    const char *equal_sign = std::strchr(envstring, '=');
-    if(equal_sign) {
-        env_cache.erase(u8string(envstring, equal_sign-envstring));
-        return _wputenv(u8string(envstring).to_wide().c_str());
-    } else {
+    delete_c_str(envstring);
+#endif
+    return nullptr;
+}
+
+int setenv(const char *varname, const char *value) {
+#ifdef _WIN32
+    if(SetEnvironmentVariableW(u8string(varname).to_wide().c_str(), u8string(value).to_wide().c_str()))
+        return 0;
+    else {
         errno = EINVAL;
         return -1;
     }
 #else
-    return putenv(envstring);
+    return std::setenv(varname, value, true);
+#endif
+}
+
+int unsetenv(const char *varname) {
+#ifdef _WIN32
+    if(SetEnvironmentVariableW(u8string(varname).to_wide().c_str(), nullptr))
+        return 0;
+    else {
+        errno = EINVAL;
+        return -1;
+    }
+#else
+    return std::unsetenv(varname);
 #endif
 }
 
@@ -73,16 +87,20 @@ int putenv(const char *envstring) {
 
 extern "C" {
 
-char *WTF8_getenv(const char *varname) {
-    return WTF8::getenv(varname);
+const char *WTF8_getenv(const char *name) {
+    return WTF8::new_c_str(WTF8::getenv(name));
 }
 
-char *WTF8_getenv_nocache(const char *varname) {
-    return WTF8::getenv(varname, true);
+const char *WTF8_freeenv(const char *envstring) {
+    return WTF8::freeenv(envstring);
 }
 
-int WTF8_putenv(const char *envstring) {
-    return WTF8::putenv(envstring);
+int WTF8_setenv(const char *name, const char *value) {
+    return WTF8::setenv(name, value);
+}
+
+int WTF8_unsetenv(const char *name) {
+    return WTF8::unsetenv(name);
 }
 
 }
