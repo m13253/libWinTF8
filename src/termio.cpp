@@ -54,9 +54,9 @@ public:
     }
 protected:
     std::streambuf *setbuf(char *buffer, std::streamsize size) {
+        unused_arg(buffer); /* only use the size parameter */
         if(size == 0)
             size = 1024;
-        /* only use the size parameter */
         if(WTF8_is_console) {
             WTF8_buffer.clear();
             WTF8_wbuffer.resize(size_t(size));

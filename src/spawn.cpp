@@ -221,6 +221,7 @@ bool waitpid(WTF8_pid_t pid, int *exit_code) {
 
 bool kill(WTF8_pid_t pid, bool force) {
 #ifdef _WIN32
+    unused_arg(force); /* non GUI processes can not be terminated gracefully */
     HANDLE process = OpenProcess(PROCESS_TERMINATE, false, pid);
     HandleCloser dummy(process);
     return process && TerminateProcess(process, ~UINT(0) /* -1 */);
