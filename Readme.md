@@ -31,7 +31,7 @@ The following is a simple `cat` program, supporting UTF-8 filename and Unicode o
 #include <libwintf8.h>
 
 /* Set the Windows console font to Lucida Console, which is the only console font supporting Unicode characters. */
-WTF8::SetConsoleFont set_console_font;
+static WTF8::SetConsoleFont set_console_font;
 
 int main() {
     /* WTF8::u8string inherits std::string. In addition to useful conversion methods, introducing a new type makes sure that different encodings do not mix up. */
