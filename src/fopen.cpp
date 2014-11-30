@@ -18,6 +18,7 @@
 */
 #include <cerrno>
 #include <cstdio>
+#include <share.h>
 #include "utils.h"
 #include "u8str.h"
 #include "utfconv.h"
