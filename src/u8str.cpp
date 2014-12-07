@@ -34,6 +34,10 @@ std::wstring u8string::to_wide(bool strict) const {
     return utf8_to_wide(*this, strict);
 }
 
+u8string u8string::validify(bool strict) const {
+    return u8string(utf8_validify(*this, strict));
+}
+
 size_t u8string::count_codepoints(bool strict) const {
     return utf8_count_codepoints(*this, strict);
 }

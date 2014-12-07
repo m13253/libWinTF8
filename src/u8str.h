@@ -46,7 +46,7 @@ public:
         std::string(std::move(s)) {
     }
     u8string &operator=(const u8string &s) {
-        *static_cast<std::string *>(this) = s;
+        std::string::operator=(s);
         return *this;
     }
     u8string &operator=(u8string &&s) {
@@ -67,6 +67,7 @@ public:
     explicit operator std::wstring() const {
         return to_wide();
     }
+    u8string validify(bool strict = false) const;
     size_t count_codepoints(bool strict = false) const;
 
     /* Inheriting all the constructors, since MSVC does not support C++ 11 inherited constructors */
