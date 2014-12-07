@@ -224,7 +224,7 @@ bool kill(WTF8_pid_t pid, bool force) {
     unused_arg(force); /* non GUI processes can not be terminated gracefully */
     HANDLE process = OpenProcess(PROCESS_TERMINATE, false, pid);
     HandleCloser dummy(process);
-    return process && TerminateProcess(process, ~UINT(0) /* -1 */);
+    return process && TerminateProcess(process, ~ UINT(0) /* -1 */);
 #else
     return ::kill(pid, force ? SIGKILL : SIGTERM) == 0;
 #endif
