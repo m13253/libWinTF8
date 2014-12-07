@@ -48,8 +48,8 @@ int WTF8_vfprintf(std::FILE *stream, const char *format, va_list ap);
 #else
 int WTF8_printf(const char *format, ...);
 int WTF8_vprintf(const char *format, va_list ap);
-int WTF8_fprintf(std::FILE *stream, const char *format, ...);
-int WTF8_vfprintf(std::FILE *stream, const char *format, va_list ap);
+int WTF8_fprintf(FILE *stream, const char *format, ...);
+int WTF8_vfprintf(FILE *stream, const char *format, va_list ap);
 #endif
 
 #endif
