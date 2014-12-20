@@ -28,6 +28,7 @@
 
 #ifdef __cplusplus
 namespace WTF8 {
+int access(const char *path, int amode);
 std::FILE *fopen(const char *path, const char *mode);
 std::FILE *freopen(const char *path, const char *mode, std::FILE *fp);
 std::FILE *fclose(std::FILE *fp);
@@ -51,6 +52,7 @@ FILE *WTF8_fclose(FILE *fp);
 #ifdef __cplusplus
 extern "C" {
 #endif
+int WTF8_access(const char *path, int amode);
 int WTF8_remove(const char *path);
 int WTF8_rename(const char *oldname, const char *newname);
 #ifdef __cplusplus
