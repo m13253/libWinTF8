@@ -17,30 +17,35 @@
   WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 */
 #pragma once
-#ifndef WTF8_H_INCLUDED_
-#define WTF8_H_INCLUDED_
+#ifndef WTF8_LOCALCONV_H_INCLUDED_
+#define WTF8_LOCALCONV_H_INCLUDED_
 
-#include "libwintf8/argv.h"
-#include "libwintf8/env.h"
-#include "libwintf8/fileio.h"
-#include "libwintf8/initcon.h"
-#include "libwintf8/localconv.h"
-#include "libwintf8/printf.h"
-#include "libwintf8/spawn.h"
-#include "libwintf8/streamio.h"
-#include "libwintf8/termio.h"
-#include "libwintf8/u8str.h"
-#include "libwintf8/utfconv.h"
+#ifdef __cplusplus
+#include <cstddef>
+#include <string>
+#else
+#include <stddef.h>
+#endif
 
-#if defined(_WIN32) && !defined(WTF8_NO_DEFINE_UNICODE)
-/* Use Unicode version of WinAPI by default just in case you forgot a -W suffix */
-#ifndef UNICODE
-#define UNICODE
+#ifdef __cplusplus
+namespace WTF8 {
+
+std::string utf8_to_local(const std::string &utf8str, bool strict = false);
+std::string local_to_utf8(const std::string &localstr, bool strict = false);
+
+}
+
 #endif
-/* Use Unicode version of C Runtime by default just in case you needed a function not provided by libWinTF8 */
-#ifndef _UNICODE
-#define _UNICODE
+
+#ifdef __cplusplus
+extern "C" {
 #endif
+
+size_t WTF8_utf8_to_local(char *localstr, const char *utf8str, int strict, size_t bufsize);
+size_t WTF8_local_to_utf8(char *utf8str, const char *localstr, int strict, size_t bufsize);
+
+#ifdef __cplusplus
+}
 #endif
 
 #endif
