@@ -32,6 +32,9 @@ namespace WTF8 {
 
 std::string utf8_to_local(const std::string &utf8str, bool strict = false);
 std::string local_to_utf8(const std::string &localstr, bool strict = false);
+
+/* When interacting with third-party libraries which does not support Unicode,
+   filenames that already exist may be converted to DOS short filename */
 std::string utf8_to_dos_filename(const std::string &utf8_filename);
 
 }
