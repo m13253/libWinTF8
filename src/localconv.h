@@ -32,6 +32,7 @@ namespace WTF8 {
 
 std::string utf8_to_local(const std::string &utf8str, bool strict = false);
 std::string local_to_utf8(const std::string &localstr, bool strict = false);
+std::string utf8_to_dos_filename(const std::string &utf8_filename);
 
 }
 
@@ -43,6 +44,7 @@ extern "C" {
 
 size_t WTF8_utf8_to_local(char *localstr, const char *utf8str, int strict, size_t bufsize);
 size_t WTF8_local_to_utf8(char *utf8str, const char *localstr, int strict, size_t bufsize);
+size_t WTF8_utf8_to_dos_filename(char *dos_filename, const char *utf8_filename, size_t bufsize);
 
 #ifdef __cplusplus
 }
