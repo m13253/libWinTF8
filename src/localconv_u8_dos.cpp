@@ -51,7 +51,7 @@ std::string utf8_to_dos_filename(const std::string &utf8_filename) {
     wide_dos_size = GetShortPathNameW(wide_filename.c_str(), wide_dos_buffer.data(), wide_dos_buffer.size());
     if(wide_dos_size == 0)
         return std::string();
-    BOOL used_replace_char = 0;
+    BOOL used_replace_char = false;
     int dos_size = WideCharToMultiByte(CP_ACP, WC_ERR_INVALID_CHARS | WC_NO_BEST_FIT_CHARS, wide_dos_buffer.data(), wide_dos_size, nullptr, 0, nullptr, &used_replace_char);
     if(dos_size == 0 || !!used_replace_char)
         throw unicode_conversion_error();
