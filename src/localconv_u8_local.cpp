@@ -26,9 +26,10 @@
 
 #ifdef _WIN32
 #include <windows.h>
-/* As of MingW-w64 3.3.0, WC_ERR_INVALID_CHARS is still missing http://sourceforge.net/p/mingw-w64/mailman/message/28541441/ */
+/* As of MingW-w64 3.3.0, WC_ERR_INVALID_CHARS is still missing. */
+/* See http://sourceforge.net/p/mingw-w64/mailman/message/28541441/ */
 #ifndef WC_ERR_INVALID_CHARS
-#define WC_ERR_INVALID_CHARS 0x80
+#define WC_ERR_INVALID_CHARS 0x00000080
 #endif
 #endif
 
@@ -36,7 +37,7 @@ namespace WTF8 {
 
 std::string utf8_to_local(const std::string &utf8str, bool strict) {
 #ifdef _WIN32
-    if(utf8str.length() == 0)
+    if(utf8str.empty())
         return utf8str;
     std::wstring widestr = utf8_to_wide(utf8str, strict);
     BOOL used_replace_char = 0;

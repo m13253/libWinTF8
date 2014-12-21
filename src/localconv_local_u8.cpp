@@ -32,7 +32,7 @@ namespace WTF8 {
 
 std::string local_to_utf8(const std::string &localstr, bool strict) {
 #ifdef _WIN32
-    if(localstr.length() == 0)
+    if(localstr.empty())
         return localstr;
     int wide_size = MultiByteToWideChar(CP_ACP, strict ? MB_ERR_INVALID_CHARS : 0, localstr.data(), localstr.length(), nullptr, 0);
     if(wide_size == 0)
