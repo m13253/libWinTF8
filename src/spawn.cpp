@@ -56,7 +56,7 @@ static WTF8_pid_t spawnvp_win32(const wchar_t *file, const std::vector<u8string>
         bool has_spaces = false;
         for(const char i : argi)
             if(i == '\0')
-                break; /* have no idea how to handle it */
+                throw process_spawn_error("Invalid arguments found when creating a new process");
             else if(i == '\\')
                 ++backslashes;
             else if(i == '"') {
@@ -161,13 +161,18 @@ static WTF8_pid_t spawnvp_posix(const char *file, char *const *argv) {
 #endif
 
 WTF8_pid_t spawnvp(const u8string &file, const std::vector<u8string> &argv) {
+    if(file.find('\0') != u8string::npos)
+        throw process_spawn_error("Invalid arguments found when creating a new process");
 #ifdef _WIN32
     return spawnvp_win32(file.empty() ? nullptr : file.to_wide().c_str(), argv);
 #else
-    std::vector<char *> cargv;
+    std::vector<char *> cargv; /* execvp accepts "char *const argv[]" instead of "const char *const argv[]". I think it is a mistake. */
     cargv.reserve(argv.size()+1);
-    for(size_t i = 0; i < argv.size(); ++i)
-        cargv.push_back(const_cast<char *>(argv.at(i).c_str()));
+    for(const u8string &i : argv) {
+        if(i.find('\0') != u8string::npos)
+            throw process_spawn_error("Invalid arguments found when creating a new process");
+        cargv.push_back(const_cast<char *>(i.c_str()));
+    }
     cargv.push_back(nullptr);
     return spawnvp_posix(file.c_str(), cargv.data());
 #endif
