@@ -57,20 +57,20 @@ static WTF8_pid_t spawnvp_win32(const wchar_t *file, const std::vector<u8string>
         for(const char i : argi)
             if(i == '\0')
                 break; /* have no idea how to handle it */
-            else if(i == '/')
+            else if(i == '\\')
                 ++backslashes;
             else if(i == '"') {
-                argo.append(backslashes*2+1, '/');
+                argo.append(backslashes*2+1, '\\');
                 argo.push_back('"');
                 backslashes = 0;
             } else {
-                argo.append(backslashes, '/');
+                argo.append(backslashes, '\\');
                 argo.push_back(i);
                 backslashes = 0;
                 if((unsigned char) i <= ' ')
                     has_spaces = true;
             }
-        argo.append(backslashes, '/');
+        argo.append(backslashes, '\\');
         if(cmdline.empty())
             has_spaces = true; /* always quote the first argument for security */
         else
