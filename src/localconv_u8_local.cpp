@@ -42,11 +42,11 @@ std::string utf8_to_local(const std::string &utf8str, bool strict) {
         return utf8str;
     std::wstring widestr = utf8_to_wide(utf8str, strict);
     BOOL used_replace_char = false;
-    int local_size = WideCharToMultiByte(CP_ACP, strict ? WC_ERR_INVALID_CHARS | WC_NO_BEST_FIT_CHARS : 0, widestr.data(), widestr.length(), nullptr, 0, nullptr, &used_replace_char);
+    int local_size = WideCharToMultiByte(CP_ACP, strict ? WC_ERR_INVALID_CHARS | WC_NO_BEST_FIT_CHARS : 0, widestr.data(), int(widestr.length()), nullptr, 0, nullptr, &used_replace_char);
     if(local_size == 0 || (strict && !!used_replace_char))
         throw unicode_conversion_error();
     std::vector<char> local_buffer(local_size);
-    local_size = WideCharToMultiByte(CP_ACP, strict ? WC_ERR_INVALID_CHARS | WC_NO_BEST_FIT_CHARS : 0, widestr.data(), widestr.length(), local_buffer.data(), local_buffer.size(), nullptr, nullptr);
+    local_size = WideCharToMultiByte(CP_ACP, strict ? WC_ERR_INVALID_CHARS | WC_NO_BEST_FIT_CHARS : 0, widestr.data(), int(widestr.length()), local_buffer.data(), int(local_buffer.size()), nullptr, nullptr);
     return std::string(local_buffer.data(), local_size);
 #else
     return utf8str;

@@ -49,7 +49,7 @@ std::string utf8_to_dos_filename(const std::string &utf8_filename) {
     if(wide_dos_size == 0)
         throw unicode_conversion_error();
     std::vector<wchar_t> wide_dos_buffer(wide_dos_size);
-    wide_dos_size = GetShortPathNameW(wide_filename.c_str(), wide_dos_buffer.data(), wide_dos_buffer.size());
+    wide_dos_size = GetShortPathNameW(wide_filename.c_str(), wide_dos_buffer.data(), DWORD(wide_dos_buffer.size()));
     if(wide_dos_size == 0)
         throw unicode_conversion_error();
     BOOL used_replace_char = false;
@@ -57,7 +57,7 @@ std::string utf8_to_dos_filename(const std::string &utf8_filename) {
     if(dos_size == 0 || !!used_replace_char)
         throw unicode_conversion_error();
     std::vector<char> dos_buffer(dos_size);
-    dos_size = WideCharToMultiByte(CP_ACP, WC_ERR_INVALID_CHARS | WC_NO_BEST_FIT_CHARS, wide_dos_buffer.data(), wide_dos_size, dos_buffer.data(), dos_buffer.size(), nullptr, nullptr);
+    dos_size = WideCharToMultiByte(CP_ACP, WC_ERR_INVALID_CHARS | WC_NO_BEST_FIT_CHARS, wide_dos_buffer.data(), wide_dos_size, dos_buffer.data(), int(dos_buffer.size()), nullptr, nullptr);
     return std::string(dos_buffer.data(), dos_size);
 #else
     return utf8_filename;

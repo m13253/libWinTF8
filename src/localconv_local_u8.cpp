@@ -35,11 +35,11 @@ std::string local_to_utf8(const std::string &localstr, bool strict) {
 #ifdef _WIN32
     if(localstr.empty())
         return localstr;
-    int wide_size = MultiByteToWideChar(CP_ACP, strict ? MB_ERR_INVALID_CHARS : 0, localstr.data(), localstr.length(), nullptr, 0);
+    int wide_size = MultiByteToWideChar(CP_ACP, strict ? MB_ERR_INVALID_CHARS : 0, localstr.data(), int(localstr.length()), nullptr, 0);
     if(wide_size == 0)
         throw unicode_conversion_error();
     std::vector<wchar_t> wide_buffer(wide_size);
-    wide_size = MultiByteToWideChar(CP_ACP, strict ? MB_ERR_INVALID_CHARS : 0, localstr.data(), localstr.length(), wide_buffer.data(), wide_buffer.size());
+    wide_size = MultiByteToWideChar(CP_ACP, strict ? MB_ERR_INVALID_CHARS : 0, localstr.data(), int(localstr.length()), wide_buffer.data(), int(wide_buffer.size()));
     return wide_to_utf8(std::wstring(wide_buffer.data(), wide_size), strict);
 #else
     return localstr;
