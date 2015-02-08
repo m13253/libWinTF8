@@ -36,16 +36,6 @@ static inline void unused_arg(const T &arg) {
 }
 
 template <typename T>
-static inline T min(T a, T b) {
-    return a < b ? a : b;
-}
-
-template <typename T>
-static inline T max(T a, T b) {
-    return b < a ? a : b;
-}
-
-template <typename T>
 static inline T clamp(T value, T a, T b) {
     return a < b ?
         value < a ? a : b < value ? b : value :

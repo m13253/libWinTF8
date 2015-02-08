@@ -16,6 +16,7 @@
   IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED
   WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 */
+#include <algorithm>
 #include <cstddef>
 #include <cstring>
 #include <vector>
@@ -72,8 +73,8 @@ size_t WTF8_utf8_to_dos_filename(char *dos_filename, const char *utf8_filename, 
     try {
         std::string dosstrpp = WTF8::utf8_to_dos_filename(std::string(utf8_filename));
         if(dos_filename && bufsize != 0) {
-            std::memcpy(dos_filename, dosstrpp.data(), WTF8::min(dosstrpp.length(), bufsize-1)*sizeof (char));
-            dos_filename[WTF8::min(dosstrpp.length(), bufsize)] = '\0';
+            std::memcpy(dos_filename, dosstrpp.data(), std::min(dosstrpp.length(), bufsize-1)*sizeof (char));
+            dos_filename[std::min(dosstrpp.length(), bufsize)] = '\0';
         }
         return dosstrpp.length();
     } catch(WTF8::unicode_conversion_error) {

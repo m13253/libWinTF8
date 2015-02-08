@@ -16,6 +16,7 @@
   IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED
   WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 */
+#include <algorithm>
 #include <cstddef>
 #include <cstring>
 #include <vector>
@@ -61,8 +62,8 @@ size_t WTF8_utf8_to_local(char *localstr, const char *utf8str, int strict, size_
     try {
         std::string localstrpp = WTF8::utf8_to_local(std::string(utf8str), strict != 0);
         if(localstr && bufsize != 0) {
-            std::memcpy(localstr, localstrpp.data(), WTF8::min(localstrpp.length(), bufsize-1)*sizeof (char));
-            localstr[WTF8::min(localstrpp.length(), bufsize)] = '\0';
+            std::memcpy(localstr, localstrpp.data(), std::min(localstrpp.length(), bufsize-1)*sizeof (char));
+            localstr[std::min(localstrpp.length(), bufsize)] = '\0';
         }
         return localstrpp.length();
     } catch(WTF8::unicode_conversion_error) {
@@ -74,8 +75,8 @@ size_t WTF8_utf8_to_local(char *localstr, const char *utf8str, int strict, size_
     else {
         size_t utf8len = std::strlen(utf8str);
         if(localstr && bufsize != 0) {
-            std::memcpy(localstr, utf8str, WTF8::min(utf8len, bufsize-1)*sizeof (char));
-            localstr[WTF8::min(utf8len, bufsize)] = '\0';
+            std::memcpy(localstr, utf8str, std::min(utf8len, bufsize-1)*sizeof (char));
+            localstr[std::min(utf8len, bufsize)] = '\0';
         }
         return utf8len;
     }

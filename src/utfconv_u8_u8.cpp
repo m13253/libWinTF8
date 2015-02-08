@@ -16,6 +16,7 @@
   IMPLIED WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED
   WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 */
+#include <algorithm>
 #include <cstddef>
 #include <cstdint>
 #include <cstring>
@@ -92,8 +93,8 @@ size_t WTF8_validify(char *validstr, const char *utf8str, int strict, size_t buf
     try {
         std::string validstrpp = WTF8::utf8_validify(std::string(utf8str), strict != 0);
         if(validstr && bufsize != 0) {
-            std::memcpy(validstr, validstrpp.data(), WTF8::min(validstrpp.length(), bufsize-1)*sizeof (char));
-            validstr[WTF8::min(validstrpp.length(), bufsize)] = '\0';
+            std::memcpy(validstr, validstrpp.data(), std::min(validstrpp.length(), bufsize-1)*sizeof (char));
+            validstr[std::min(validstrpp.length(), bufsize)] = '\0';
         }
         return validstrpp.length();
     } catch(WTF8::unicode_conversion_error) {
