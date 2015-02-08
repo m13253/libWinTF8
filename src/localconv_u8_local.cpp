@@ -62,8 +62,8 @@ size_t WTF8_utf8_to_local(char *localstr, const char *utf8str, int strict, size_
     try {
         std::string localstrpp = WTF8::utf8_to_local(std::string(utf8str), strict != 0);
         if(localstr && bufsize != 0) {
-            std::memcpy(localstr, localstrpp.data(), std::min(localstrpp.length(), bufsize-1)*sizeof (char));
-            localstr[std::min(localstrpp.length(), bufsize)] = '\0';
+            std::memcpy(localstr, localstrpp.data(), (std::min)(localstrpp.length(), bufsize-1)*sizeof (char));
+            localstr[(std::min)(localstrpp.length(), bufsize)] = '\0';
         }
         return localstrpp.length();
     } catch(WTF8::unicode_conversion_error) {

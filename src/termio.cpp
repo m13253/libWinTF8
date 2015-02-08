@@ -215,7 +215,7 @@ private:
                 return size;
             else
                 /* UTF conversion error may happen, the accurate number of chars is unknown */
-                return std::min(u8string::from_wide(wbuf.substr(0, wchars_written)).size(), size);
+                return (std::min)(u8string::from_wide(wbuf.substr(0, wchars_written)).size(), size);
         } else {
             DWORD bytes_written = 0;
             if(!WriteFile(WTF8_handle, buf, DWORD(size), &bytes_written, nullptr))
