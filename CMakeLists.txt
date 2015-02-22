@@ -13,7 +13,10 @@ endif()
 aux_source_directory(src SRC_SOURCES)
 add_library(wintf8 STATIC ${SRC_SOURCES})
 
-set_property(TARGET wintf8 PROPERTY CXX_STANDARD 11)
+set_target_properties(wintf8 PROPERTIES
+    CXX_STANDARD 11
+    POSITION_INDEPENDENT_CODE ON
+)
 # Currently buggy, wait for CMake update
 # target_compile_features(wintf8 PUBLIC cxx_deleted_functions cxx_explicit_conversions cxx_nullptr cxx_right_angle_brackets cxx_rvalue_references)
 # target_compile_features(wintf8 PRIVATE cxx_generalized_initializers cxx_range_for)
@@ -40,14 +43,7 @@ if("${CMAKE_SOURCE_DIR}" STREQUAL "${CMAKE_CURRENT_SOURCE_DIR}")  # Test subproj
         LIBRARY DESTINATION "lib"
         ARCHIVE DESTINATION "lib"
     )
-    install(DIRECTORY src/
-        DESTINATION "include/libwintf8"
-        FILES_MATCHING
-        PATTERN "*.h"
-        PATTERN "libwintf8.h" EXCLUDE
-        PATTERN "utils.h" EXCLUDE
-    )
-    install(FILES src/libwintf8.h
+    install(DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/include"
         DESTINATION "include"
     )
 endif()
