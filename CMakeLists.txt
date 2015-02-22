@@ -23,6 +23,15 @@ set_property(TARGET wintf8 PROPERTY CXX_STANDARD 11)
 #     target_compile_features(wintf8 PUBLIC cxx_inheriting_constructors)
 # endif()
 
+# Arrange header files for external use
+add_custom_command(TARGET wintf8 POST_BUILD COMMAND ${CMAKE_COMMAND} -E make_directory "include/libwintf8")
+add_custom_command(TARGET wintf8 POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_CURRENT_SOURCE_DIR}/src/libwintf8.h" "include/libwintf8.h")
+file(GLOB_RECURSE SRC_HEADERS RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}/src" "src/*.h")
+list(REMOVE_ITEM SRC_HEADERS "libwintf8.h" "utils.h")
+foreach(SRC_HEADER ${SRC_HEADERS})
+    add_custom_command(TARGET wintf8 POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_CURRENT_SOURCE_DIR}/src/${SRC_HEADER}" "include/libwintf8/${SRC_HEADER}")
+endforeach()
+target_include_directories(wintf8 INTERFACE "${CMAKE_CURRENT_BINARY_DIR}/include")
 install(TARGETS wintf8
         RUNTIME DESTINATION "bin"
         LIBRARY DESTINATION "lib"
@@ -30,7 +39,8 @@ install(TARGETS wintf8
 )
 install(DIRECTORY src/
         DESTINATION "include/libwintf8"
-        FILES_MATCHING PATTERN "*.h"
+        FILES_MATCHING
+        PATTERN "*.h"
         PATTERN "libwintf8.h" EXCLUDE
         PATTERN "utils.h" EXCLUDE
 )
