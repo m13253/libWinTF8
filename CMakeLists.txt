@@ -33,18 +33,21 @@ foreach(SRC_HEADER ${SRC_HEADERS})
 endforeach()
 target_include_directories(wintf8 INTERFACE "${CMAKE_CURRENT_BINARY_DIR}/include")
 
-install(TARGETS wintf8
+
+if("${CMAKE_SOURCE_DIR}" STREQUAL "${CMAKE_CURRENT_SOURCE_DIR}")  # Test subproject
+    install(TARGETS wintf8
         RUNTIME DESTINATION "bin"
         LIBRARY DESTINATION "lib"
         ARCHIVE DESTINATION "lib"
-)
-install(DIRECTORY src/
+    )
+    install(DIRECTORY src/
         DESTINATION "include/libwintf8"
         FILES_MATCHING
         PATTERN "*.h"
         PATTERN "libwintf8.h" EXCLUDE
         PATTERN "utils.h" EXCLUDE
-)
-install(FILES src/libwintf8.h
+    )
+    install(FILES src/libwintf8.h
         DESTINATION "include"
-)
+    )
+endif()
