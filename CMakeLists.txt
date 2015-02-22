@@ -32,6 +32,7 @@ foreach(SRC_HEADER ${SRC_HEADERS})
     add_custom_command(TARGET wintf8 POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_CURRENT_SOURCE_DIR}/src/${SRC_HEADER}" "include/libwintf8/${SRC_HEADER}")
 endforeach()
 target_include_directories(wintf8 INTERFACE "${CMAKE_CURRENT_BINARY_DIR}/include")
+
 install(TARGETS wintf8
         RUNTIME DESTINATION "bin"
         LIBRARY DESTINATION "lib"
