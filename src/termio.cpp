@@ -48,16 +48,16 @@ public:
         DWORD dummy;
         WTF8_is_console = !!GetConsoleMode(WTF8_handle, &dummy);
         if(WTF8_is_console)
-            WTF8_wbuffer.resize(1024);
+            WTF8_wbuffer.resize(BUFSIZ);
         else
-            WTF8_buffer.reserve(1024);
+            WTF8_buffer.reserve(BUFSIZ);
         setg(nullptr, nullptr, nullptr);
     }
 protected:
     std::streambuf *setbuf(char *buffer, std::streamsize size) {
         unused_arg(buffer); /* only use the size parameter */
         if(size == 0)
-            size = 1024;
+            size = BUFSIZ;
         if(WTF8_is_console) {
             WTF8_buffer.clear();
             WTF8_wbuffer.resize(size_t(size));
@@ -133,7 +133,7 @@ private:
     wchar_t last_surrogate_pair = L'\0';
     bool has_last_putback = false;
     char last_putback;
-    size_t WTF8_buffer_size = 1024;
+    size_t WTF8_buffer_size = BUFSIZ;
 };
 
 class ConsoleOutputBuffer : public std::streambuf {
@@ -149,10 +149,10 @@ protected:
         sync();
         if(size == 0) {
             WTF8_init_buffer.clear();
-            WTF8_init_buffer.resize(1024);
+            WTF8_init_buffer.resize(BUFSIZ);
             WTF8_init_buffer.shrink_to_fit();
             buffer = WTF8_init_buffer.data();
-            size = 1024;
+            size = BUFSIZ;
         } else if(!WTF8_init_buffer.empty()) {
             WTF8_init_buffer.resize(0);
             WTF8_init_buffer.shrink_to_fit();
@@ -226,9 +226,9 @@ private:
     }
     HANDLE WTF8_handle;
     bool WTF8_is_console;
-    std::vector<char> WTF8_init_buffer = std::vector<char>(1024);
+    std::vector<char> WTF8_init_buffer = std::vector<char>(BUFSIZ);
     char *WTF8_buffer = WTF8_init_buffer.data();
-    size_t WTF8_buffer_size = 1024;
+    size_t WTF8_buffer_size = BUFSIZ;
 };
 
 class ConsoleInput : public std::istream {
