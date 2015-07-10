@@ -49,6 +49,7 @@ std::string utf8_to_local(const std::string &utf8str, bool strict) {
     local_size = WideCharToMultiByte(CP_ACP, strict ? WC_ERR_INVALID_CHARS | WC_NO_BEST_FIT_CHARS : 0, widestr.data(), int(widestr.length()), local_buffer.data(), int(local_buffer.size()), nullptr, nullptr);
     return std::string(local_buffer.data(), local_size);
 #else
+    unused_arg(strict);
     return utf8str;
 #endif
 }

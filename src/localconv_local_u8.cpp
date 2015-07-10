@@ -42,6 +42,7 @@ std::string local_to_utf8(const std::string &localstr, bool strict) {
     wide_size = MultiByteToWideChar(CP_ACP, strict ? MB_ERR_INVALID_CHARS : 0, localstr.data(), int(localstr.length()), wide_buffer.data(), int(wide_buffer.size()));
     return wide_to_utf8(std::wstring(wide_buffer.data(), wide_size), strict);
 #else
+    unused_arg(strict);
     return localstr;
 #endif
 }
