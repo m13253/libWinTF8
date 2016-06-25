@@ -57,7 +57,7 @@ std::wstring utf8_to_wide(const std::string &utf8str, bool strict) {
             }
         } else if(uint8_t(utf8str[i]) < 0xf0) {
             if(utf8_check_continuation(utf8str, i, 2)) {
-                uint32_t ucs4 = uint32_t(utf8str[i] & 0xf) << 12 | uint32_t(utf8str[i+1] & 0x3f) << 6 | (utf8str[i+2] & 0x3f);
+                uint32_t ucs4 = uint32_t(utf8str[i] & 0xf) << 12 | uint32_t(utf8str[i+1] & 0x3f) << 6 | uint32_t(utf8str[i+2] & 0x3f);
                 if(ucs4 >= 0x800 && (ucs4 & 0xf800) != 0xd800) {
                     widestr.push_back(wchar_t(ucs4));
                     i += 3;
