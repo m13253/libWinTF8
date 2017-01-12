@@ -23,94 +23,98 @@
 #include "u8str.h"
 
 #ifdef __cplusplus
+/*!
+ *  \addtogroup WTF8
+ * libWinTF8 API for C++
+ *  @{
+ */
+
+//! The main libWinTF8 namespace
 namespace WTF8 {
 
-/**
- * Get an environment variable of this process
+/*!\brief Get an environment variable of this process
  *
- * Errors:
+ * \return
  *   If no such environment variable exists, return nullptr
  *
- * Cleaning:
+ * \remark
  *   The result must be released with `WTF8::freeenv`
  */
 const char *getenv(const char *varname);
 
-/**
- * Free the memory that was allocated with `WTF8::getenv`
+/*!\brief Free the memory that was allocated with `WTF8::getenv`
  *
- * Result:
+ * \return
  *   nullptr
  */
 const char *freeenv(const char *envstring);
 
-/**
- * Set an environment variable for this process
+/*!\brief Set an environment variable for this process
  *
- * Result:
+ * \return
  *   0 on success, or -1 on error
  *
- * Errors:
+ * \throw
  *   `errno` is set to indicate an error
  */
 int setenv(const char *varname, const char *value);
 
-/**
- * Clear an environment variable for this process
+/*!\brief Clear an environment variable for this process
  *
- * Result:
+ * \return
  *   0 on success, or -1 on error
  *
- * Errors:
- *   `errno` is set to indicate an error
+ * \throw
+ *   The `errno` is set to indicate an error
  */
 int unsetenv(const char *varname);
 
 }
 #endif
-
+/*! @} End of Doxygen Groups*/
+/*!
+ *  \addtogroup WTF8_C
+ * libWinTF8 API extension for C
+ *  @{
+ */
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-/**
- * Get an environment variable of this process
+/*!\brief Get an environment variable of this process
  *
- * Errors:
+ * \return
  *   If no such environment variable exists, return NULL
  *
- * Cleaning:
- *   The result must be released with `WTF8::freeenv`
+ * \remark
+ *   The result must be released with `WTF8_freeenv`
  */
 const char *WTF8_getenv(const char *varname);
 
-/**
- * Free the memory that was allocated with `WTF8::getenv`
+/*!\brief Free the memory that was allocated with `WTF8_getenv`
  *
- * Result:
+ * \return
  *   NULL
  */
 const char *WTF8_freeenv(const char *envstring);
 
-/**
- * Set an environment variable for this process
+/*!\brief Set an environment variable for this process
  *
- * Result:
+ * \return
  *   0 on success, or -1 on error
  *
- * Errors:
- *   `errno` is set to indicate an error
+ * \throw
+ *   The `errno` is set to indicate an error
  */
 int WTF8_setenv(const char *varname, const char *value);
 
-/**
- * Clear an environment variable for this process
+/*!\brief Clear an environment variable for this process
  *
- * Result:
+ * \return
  *   0 on success, or -1 on error
  *
- * Errors:
- *   `errno` is set to indicate an error
+ * \throw
+ *   The `errno` is set to indicate an error
  */
 int WTF8_unsetenv(const char *varname);
 
@@ -119,3 +123,4 @@ int WTF8_unsetenv(const char *varname);
 #endif
 
 #endif
+/*! @} End of Doxygen Groups*/

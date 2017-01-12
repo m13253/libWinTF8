@@ -28,25 +28,30 @@
 #define ssize_t ptrdiff_t
 #endif
 
+/*!
+ *  \addtogroup WTF8
+ * libWinTF8 API for C++
+ *  @{
+ */
 namespace WTF8 {
 
-/**
- * Mark unused arguments to avoid compiler warnings
+/*!\brief Mark unused arguments to suppress compiler warnings
  *
+ * \note
  * Usage:
+ * ```
  *   int func(int a) {
  *       unused_arg(a);
  *       return 42;
  *   }
+ * ```
  */
 template <typename T>
 static inline void unused_arg(const T &arg) {
     static_cast<void>(arg);
 }
 
-/**
- * Clamp value in range [a, b]
- */
+//! Clamp value in range [a, b]
 template <typename T>
 static inline T clamp(T value, T a, T b) {
     return a < b ?
@@ -54,10 +59,10 @@ static inline T clamp(T value, T a, T b) {
         value < b ? b : a < value ? a : value;
 }
 
-/**
- * Copy the content of a C++ string to a new C string
+/*!\brief Copy the content of a C++ string to a new C string
  *
- * Cleaning:
+ * \tparam charT The type of characters
+ * \remark
  *   The memory must be freed with `WTF8::delete_c_str`
  */
 template <typename charT>
@@ -67,11 +72,10 @@ static inline charT *new_c_str(const std::basic_string<charT> &s) {
     return result;
 }
 
-/**
- * Copy the content of a C string to a new C string
- * The behavior is similar to `std::strdup`
+/*!\brief Copy the content of a C string to a new C string.
+ *        The behavior is similar to `std::strdup`
  *
- * Cleaning:
+ * \remark
  *   The memory must be freed with `WTF8::delete_c_str`
  */
 template <typename charT>
@@ -85,10 +89,9 @@ static inline charT *new_c_str(const charT *s) {
         return nullptr;
 }
 
-/**
- * Free the memory that was allocated with `WTF8::new_c_str`
- *
- * Result:
+/*!\brief Free the memory that was allocated with `WTF8::new_c_str`
+ * 
+ * \return
  *   nullptr
  */
 template <typename charT>
@@ -101,3 +104,4 @@ static inline charT *delete_c_str(charT *s) {
 }
 
 #endif
+/*! @} End of Doxygen Groups*/

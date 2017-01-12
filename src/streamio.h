@@ -25,13 +25,16 @@
 #include <fstream>
 #include <utility>
 #include "u8str.h"
-
+/*!
+ *  \addtogroup WTF8
+ * libWinTF8 API for C++
+ *  @{
+ */
 namespace WTF8 {
 
-/**
- * An `std::ifstream` implementation that accepts UTF-8 strings as filename
+/*!\brief An `std::ifstream` implementation that accepts UTF-8 strings as filename
  *
- * Bugs:
+ * \bug
  *   Since `std::ifstream::open(const std::wstring &filename)` is not implementated by MinGW,
  *   alternative measures (refer to `Boost::NoWide`) must be taken when building on such platform
  */
@@ -75,10 +78,9 @@ public:
 #endif
 };
 
-/**
- * An `std::ofstream` implementation that accepts UTF-8 strings as filename
+/*!\brief An `std::ofstream` implementation that accepts UTF-8 strings as filename
  *
- * Bugs:
+ * \bug
  *   Since `std::ofstream::open(const std::wstring &filename)` is not implementated by MinGW,
  *   alternative measures (refer to `Boost::NoWide`) must be taken when building on such platform
  */
@@ -122,10 +124,9 @@ public:
 #endif
 };
 
-/**
- * An `std::fstream` implementation that accepts UTF-8 strings as filename
+/*!\brief An `std::fstream` implementation that accepts UTF-8 strings as filename
  *
- * Bugs:
+ * \bug
  *   Since `std::fstream::open(const std::wstring &filename)` is not implementated by MinGW,
  *   alternative measures (refer to `Boost::NoWide`) must be taken when building on such platform
  */
@@ -169,8 +170,11 @@ public:
 #endif
 };
 
-/**
- * An `std::filebuf` implementation that accepts UTF-8 strings as filename
+/*!\brief An `std::filebuf` implementation that accepts UTF-8 strings as filename
+ * 
+ * \tparam CharT
+ * \tparam Traits
+ * 
  */
 template<typename CharT, typename Traits = std::char_traits<CharT> >
 class basic_filebuf : public std::basic_filebuf<CharT, Traits> {
@@ -215,3 +219,4 @@ typedef basic_filebuf<wchar_t>  wfilebuf;
 #endif
 
 #endif
+/*! @} End of Doxygen Groups*/
