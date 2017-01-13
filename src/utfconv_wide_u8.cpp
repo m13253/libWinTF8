@@ -25,7 +25,6 @@
 #include "utfconv.h"
 
 namespace WTF8 {
-
 std::string wide_to_utf8(const std::wstring &widestr, bool strict) {
     std::string utf8str;
     size_t i = 0;

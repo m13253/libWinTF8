@@ -26,47 +26,54 @@
 #include "u8str.h"
 
 #ifdef __cplusplus
+/*!
+ *  \addtogroup WTF8
+ * libWinTF8 API for C++
+ *  @{
+ */
 namespace WTF8 {
 
-/**
- * Get the command line arguments of this process
+/*!\brief Get the command line arguments of this process
  *
- * Result:
+ * \return
  *   The process name is in [0]
  *   Other arguments are followed
  *
- * Throws:
+ * \throws
  *   std::runtime_error
  */
 std::vector<u8string> getargv();
 
 }
 #endif
-
+/*! @} End of Doxygen Groups*/
+/*!
+ *  \addtogroup WTF8_C
+ * libWinTF8 API extension for C
+ *  @{
+ */
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-/**
- * Get the command line arguments of this process
+/*!\brief Get the command line arguments of this process
  *
- * Result:
+ * \return
  *   An array of C strings
  *   The process name is in [0]
  *   Other arguments are followed
  *
- * Errors:
+ * \throws
  *   Upon error, returns NULL
  *
- * Cleaning:
+ * \remark
  *   The result must be released with `WTF8_freeargv`
  */
 char **WTF8_getargv(int *argc);
 
-/**
- * Free the memory that was allocated with `WTF8_getargv`
+/*!\brief Free the memory that was allocated with `WTF8_getargv`
  *
- * Result:
+ * \result
  *   NULL
  */
 char **WTF8_freeargv(char **argv);
@@ -76,3 +83,4 @@ char **WTF8_freeargv(char **argv);
 #endif
 
 #endif
+/*! @} End of Doxygen Groups*/

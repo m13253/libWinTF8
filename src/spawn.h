@@ -38,77 +38,97 @@ typedef int WTF8_pid_t;
 #endif
 
 #ifdef __cplusplus
-namespace WTF8 {
+/*!
+ *  \addtogroup WTF8
+ * libWinTF8 API for C++
+ *  @{
+ */
 
+namespace WTF8 {
+//! This exception will be thrown when libWTF8 have issues dealing with spawning sub-process
 class process_spawn_error : public std::runtime_error {
 public:
     process_spawn_error(const char *what) : std::runtime_error(what) {}
     process_spawn_error() : std::runtime_error("Unable to create a new process") {}
 };
 
-/**
- * Start a process with the given executable filename and given arguments
+/*!\brief Start a process with the given executable filename and given arguments
+ * \param file Path to the executable
+ * \param argv Arrguments for the executable
  *
- * argv[0] should be the executable name of the new process
+ * \remark argv[0] should be the executable name of the new process
  *
- * Result:
+ * \result
  *   The Process ID of the new process
  *
- * Throws:
+ * \throws
  *   WTF8::process_spawn_error
  */
 WTF8_pid_t spawnvp(const u8string &file, const std::vector<u8string> &argv);
 
-/**
- * Wait for a process to terminate and optionally fetch its exit code
- *
- * Result:
+/*!\brief Wait for a process to terminate and optionally fetch its exit code
+ * \param pid PID of the process you want to wait for
+ * \param force The exit status you expect the target process to return
+ * \result
  *   true on success, false on failure
  */
 bool waitpid(WTF8_pid_t pid, int *exit_code = nullptr);
 
-/**
- * Kill a process
+/*!\brief Kill a process
  *
- * Result:
+ * \param pid PID of the process you want to kill
+ * \param force If you want to kill the process by force (like using SIGKILL instead of SIGTERM)
+ *              Set to non-zero value to enable
+ * \result
  *   true on success, false on failure
  */
 bool kill(WTF8_pid_t pid, bool force = false);
 
 }
 #endif
-
+/*! @} End of Doxygen Groups*/
+/*!
+ *  \addtogroup WTF8_C
+ * libWinTF8 API extension for C
+ *  @{
+ */
 #ifdef __cplusplus
 extern "C" {
 #endif
 
 static const WTF8_pid_t WTF8_PROCESS_SPAWN_ERROR = ~(WTF8_pid_t) 0 /* -1 */;
 
-/**
- * Start a process with the given executable filename and given arguments
+/*!\brief Start a process with the given executable filename and given arguments
  *
- * argv[0] should be the executable name of the new process
+ * \remark argv[0] should be the executable name of the new process
+ * \param file Path to the executable
+ * \param argv Arrguments for the executable
  *
- * Result:
+ * \result
  *   The Process ID of the new process
  *
- * Errors:
+ * \throws
  *   Return WTF8_PROCESS_SPAWN_ERROR on failure
  */
 WTF8_pid_t WTF8_spawnvp(const char *file, char *const *argv);
 
-/**
- * Wait for a process to terminate and optionally fetch its exit code
- *
- * Result:
+/*!\brief Wait for a process to terminate and optionally fetch its exit code
+ * 
+ * \param pid PID of the process you want to wait for
+ * \param force The exit status you expect the target process to return
+ * 
+ * \result
  *   non-zero on success, zero on failure
  */
 int WTF8_waitpid(WTF8_pid_t pid, int *exit_code);
 
-/**
- * Kill a process
+/*!\brief Kill a process
+ * 
+ * \param pid PID of the process you want to kill
+ * \param force If you want to kill the process by force (like using SIGKILL instead of SIGTERM)
+ *              Set to non-zero value to enable
  *
- * Result:
+ * \result
  *   non-zero on success, zero on failure
  */
 int WTF8_kill(WTF8_pid_t pid, int force);
@@ -118,3 +138,4 @@ int WTF8_kill(WTF8_pid_t pid, int force);
 #endif
 
 #endif
+/*! @} End of Doxygen Groups*/

@@ -27,11 +27,18 @@
 #include <string>
 #include <utility>
 
+/*!
+ *  \addtogroup WTF8
+ *  @{
+ */
+
+//! The main libWinTF8 namespace 
 namespace WTF8 {
 
-/**
- * A string compatible to `std::string`, that stores UTF-8 string
- * By marking a variable with the type `WTF8::u8string`,
+/*!\brief A string compatible to `std::string` which stores UTF-8 string
+ * 
+ * \details
+ * In fact, by marking a variable with the type `WTF8::u8string`,
  * it could be made clear that the string that this variable stores is UTF-8
  */
 class u8string : public std::string {
@@ -113,3 +120,4 @@ struct hash<WTF8::u8string> {
 #endif
 
 #endif
+/*! @} End of Doxygen Groups*/

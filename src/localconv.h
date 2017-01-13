@@ -28,37 +28,40 @@
 #endif
 
 #ifdef __cplusplus
+/*!
+ *  \addtogroup WTF8
+ * libWinTF8 API for C++
+ *  @{
+ */
 namespace WTF8 {
 
-/**
- * Convert a UTF-8 string to local charest (the so-called Windows ANSI)
+/*!\brief Convert a UTF-8 string to local charest (the so-called Windows ANSI)
  *
  * On platforms other than Windows, this is identical to `WTF8::utf8_validify`
  *
- * Throws:
+ * \throws
  *   WTF8::unicode_conversion_error (when `strict` is set)
  */
 std::string utf8_to_local(const std::string &utf8str, bool strict = false);
 
-/**
- * Convert local charest string (the so-called Windows ANSI) to UTF-8
+/*!\brief Convert local charest string (the so-called Windows ANSI) to UTF-8
  *
  * On platforms other than Windows, this is identical to `WTF8::utf8_validify`
  *
- * Throws:
+ * \throws
  *   WTF8::unicode_conversion_error (when `strict` is set)
  */
 std::string local_to_utf8(const std::string &localstr, bool strict = false);
 
-/**
- * Convert a UTF-8 filename to a DOS short filename
+/*!\brief Convert a UTF-8 filename to a DOS short filename
  *
+ * \details
  * When interacting with third-party libraries which does not support Unicode,
  * filenames that already exist may be converted to DOS short filename
  *
  * On platforms other than Windows, this is identical to strict `WTF8::utf8_validify`
  *
- * Throws:
+ * \throws
  *   WTF8::unicode_conversion_error
  */
 std::string utf8_to_dos_filename(const std::string &utf8_filename);
@@ -66,52 +69,54 @@ std::string utf8_to_dos_filename(const std::string &utf8_filename);
 }
 
 #endif
-
+/*! @} End of Doxygen Groups*/
+/*!
+ *  \addtogroup WTF8_C
+ * libWinTF8 API extension for C
+ *  @{
+ */
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-/**
- * Convert a UTF-8 string to local charest (the so-called Windows ANSI)
+/*!\brief Convert a UTF-8 string to local charest (the so-called Windows ANSI)
  *
  * On platforms other than Windows, this is identical to `WTF8::utf8_validify`
  *
- * Results:
+ * \return
  *   The converted string is stored in `localstr`,
  *   at most `bufsize` bytes, including trailing '\0' may be written
  *   The return value is the size of the full converted string
  *
- * Errors:
+ * \throw
  *   Return WTF8_UNICODE_CONVERT_ERROR when `strict` is non-zero and an error was found
  */
 size_t WTF8_utf8_to_local(char *localstr, const char *utf8str, int strict, size_t bufsize);
 
-/**
- * Convert local charest string (the so-called Windows ANSI) to UTF-8
+/*!\brief Convert local charest string (the so-called Windows ANSI) to UTF-8
  *
  * On platforms other than Windows, this is identical to `WTF8::utf8_validify`
  *
- * Results:
+ * \return
  *   The converted string is stored in `utf8str`,
  *   at most `bufsize` bytes, including trailing '\0' may be written
  *   The return value is the size of the full converted string
  *
- * Errors:
+ * \throw
  *   Return WTF8_UNICODE_CONVERT_ERROR when `strict` is non-zero and an error was found
  */
 size_t WTF8_local_to_utf8(char *utf8str, const char *localstr, int strict, size_t bufsize);
 
-/**
- * Convert a UTF-8 filename to a DOS short filename
+/*!\brief Convert a UTF-8 filename to a DOS short filename
  *
  * On platforms other than Windows, this is identical to strict `WTF8::utf8_validify`
  *
- * Results:
+ * \return
  *   The converted string is stored in `dos_filename`,
  *   at most `bufsize` bytes, including trailing '\0' may be written
  *   The return value is the size of the full converted string
  *
- * Errors:
+ * \throw
  *   Return WTF8_UNICODE_CONVERT_ERROR
  */
 size_t WTF8_utf8_to_dos_filename(char *dos_filename, const char *utf8_filename, size_t bufsize);
@@ -121,3 +126,4 @@ size_t WTF8_utf8_to_dos_filename(char *dos_filename, const char *utf8_filename, 
 #endif
 
 #endif
+/*! @} End of Doxygen Groups*/
